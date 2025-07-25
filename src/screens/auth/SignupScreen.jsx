@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TextInput, Pressable, Dimensions } from 'react-native'
 import { colors } from '../../global/colors'
 import { useEffect, useState } from 'react';
-
+import { useSignupMutation } from '../../services/auth/authApi';
 
 const textInputWidth = Dimensions.get('window').width * 0.7
 
@@ -10,6 +10,20 @@ const SignupScreen = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
+    const [triggerSignup, result] = useSignupMutation()
+
+    const onSubmit = ()=>{
+        triggerSignup({email,password})
+    }
+
+    useEffect(()=>{
+        if(result.status==="fulfilled"){
+            navigation.navigate('Login')
+        }else if(result.status==="rejected"){
+            console.log(result.error.data.message)
+        }
+    },[result])
 
     return (
         <View style={styles.gradient}>
@@ -51,7 +65,7 @@ const SignupScreen = ({ navigation }) => {
                 </Pressable>
             </View>
 
-            <Pressable style={styles.btn} onPress={null}><Text style={styles.btnText}>Crear cuenta</Text></Pressable>
+            <Pressable style={styles.btn} onPress={onSubmit}><Text style={styles.btnText}>Crear cuenta</Text></Pressable>
 
         </View>
     )

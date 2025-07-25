@@ -10,6 +10,7 @@ const textInputWidth = Dimensions.get('window').width * 0.7
 const LoginScreen = ({ navigation, route }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
     const [triggerLogin, result] = useLoginMutation()
 
     const dispatch = useDispatch()
@@ -17,14 +18,14 @@ const LoginScreen = ({ navigation, route }) => {
     const onsubmit = ()=>{
         triggerLogin({email,password})
     }
-
-    //console.log(result)
+    
     useEffect(()=>{
         if(result.status==="fulfilled"){
             dispatch(setUser({email: result.data.email, localId: result.data.localId}))
+        }else if(result.status==="rejected"){
+            setError(result.error.data.message)
         }
     },[result])
-
 
 
     return (
@@ -61,6 +62,10 @@ const LoginScreen = ({ navigation, route }) => {
             </View>
 
             <Pressable style={styles.btn} onPress={onsubmit}><Text style={styles.btnText}>Iniciar sesión</Text></Pressable>
+            {
+                error &&
+                <Text style={styles.error}>{error}</Text>
+            }
         </View>
     )
 }

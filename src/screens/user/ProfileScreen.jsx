@@ -107,7 +107,7 @@ const ProfileScreen = () => {
                                 longitudeDelta: 0.0421,
                             }}
                         >
-                            <Marker coordinate={{ "latitude": location.coords.latitude, "longitude": location.coords.longitude }} title={"Lugar Geek"} />
+                            <Marker coordinate={{ "latitude": location.coords.latitude, "longitude": location.coords.longitude }} title={"Usuario"} />
                         </MapView>
                         :
                         (

@@ -3,7 +3,7 @@ import { createSlice, current } from "@reduxjs/toolkit";
 const cartSlice = createSlice({
     name: 'cart',
     initialState: {
-        user: "Demo",
+        user: "",
         updatedAt: new Date().toLocaleString(),
         cartItems: [],
         total:0
