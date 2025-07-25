@@ -16,6 +16,7 @@ const LoginScreen = ({ navigation, route }) => {
     const dispatch = useDispatch()
 
     const onsubmit = ()=>{
+        setError("")
         triggerLogin({email,password})
     }
     
@@ -23,7 +24,7 @@ const LoginScreen = ({ navigation, route }) => {
         if(result.status==="fulfilled"){
             dispatch(setUser({email: result.data.email, localId: result.data.localId}))
         }else if(result.status==="rejected"){
-            setError(result.error.data.message)
+            setError(result.error.data.error.message)
         }
     },[result])
 
@@ -61,11 +62,9 @@ const LoginScreen = ({ navigation, route }) => {
                 </Pressable>
             </View>
 
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+
             <Pressable style={styles.btn} onPress={onsubmit}><Text style={styles.btnText}>Iniciar sesión</Text></Pressable>
-            {
-                error &&
-                <Text style={styles.error}>{error}</Text>
-            }
         </View>
     )
 }
@@ -133,9 +132,9 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     error: {
-        padding:16,
-        backgroundColor:colors.error,
-        borderRadius:8,
+        padding: 16,
+        backgroundColor: colors.error,
+        borderRadius: 8,
         color: colors.white
     }
 })

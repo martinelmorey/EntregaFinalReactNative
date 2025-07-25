@@ -10,10 +10,16 @@ const SignupScreen = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [error, setError] = useState("")
 
     const [triggerSignup, result] = useSignupMutation()
 
     const onSubmit = ()=>{
+        setError("")
+        if (password !== confirmPassword) {
+            setError("Las contraseñas no coinciden")
+            return
+        }
         triggerSignup({email,password})
     }
 
@@ -21,7 +27,7 @@ const SignupScreen = ({ navigation }) => {
         if(result.status==="fulfilled"){
             navigation.navigate('Login')
         }else if(result.status==="rejected"){
-            console.log(result.error.data.message)
+            setError(result.error.data.error.message)
         }
     },[result])
 
@@ -64,6 +70,8 @@ const SignupScreen = ({ navigation }) => {
                     </Text>
                 </Pressable>
             </View>
+
+            {error ? <Text style={styles.error}>{error}</Text> : null}        
 
             <Pressable style={styles.btn} onPress={onSubmit}><Text style={styles.btnText}>Crear cuenta</Text></Pressable>
 
