@@ -13,7 +13,7 @@ const SignupScreen = ({ navigation }) => {
 
     return (
         <View style={styles.gradient}>
-            <Text style={styles.title}>Mundo Geek</Text>
+            <Text style={styles.title}>Rem Ecommerce</Text>
             <Text style={styles.subTitle}>Registrate</Text>
             <View style={styles.inputContainer}>
                 <TextInput
