@@ -7,6 +7,13 @@ import { useDispatch } from 'react-redux';
 
 const textInputWidth = Dimensions.get('window').width * 0.7
 
+const errorMessages = {
+    "INVALID_LOGIN_CREDENTIALS": "El correo o la contraseña son incorrectos.",
+    "INVALID_EMAIL": "El formato del correo electrónico no es válido.",
+    "MISSING_EMAIL": "Debes ingresar un correo electrónico.",
+    "MISSING_PASSWORD": "Debes ingresar una contraseña."
+}
+
 const LoginScreen = ({ navigation, route }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -16,15 +23,33 @@ const LoginScreen = ({ navigation, route }) => {
     const dispatch = useDispatch()
 
     const onsubmit = ()=>{
-        setError("")
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
+            return; 
+        }
+        setError("");
         triggerLogin({email,password})
     }
+
+    const validateForm = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+        if (!email) return errorMessages.MISSING_EMAIL;
+        if (!emailRegex.test(email)) return errorMessages.INVALID_EMAIL;
+        if (!password) return errorMessages.MISSING_PASSWORD;
+    
+        return null; 
+    }
+    
     
     useEffect(()=>{
         if(result.status==="fulfilled"){
             dispatch(setUser({email: result.data.email, localId: result.data.localId}))
         }else if(result.status==="rejected"){
-            setError(result.error.data.error.message)
+            const errorCode = result.error.data.error.message
+            const errorToShowMessage = errorMessages[errorCode] || "Ocurrió un error inesperado. Inténtalo de nuevo."
+            setError(errorToShowMessage)
         }
     },[result])
 

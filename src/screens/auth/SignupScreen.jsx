@@ -5,6 +5,15 @@ import { useSignupMutation } from '../../services/auth/authApi';
 
 const textInputWidth = Dimensions.get('window').width * 0.7
 
+const errorMessages = {
+    "EMAIL_EXISTS": "El correo electrónico ya se encuentra registrado.",
+    "WEAK_PASSWORD" : "La contraseña debe tener al menos 6 caracteres.",
+    "MISSING_EMAIL": "Debes ingresar un correo electrónico.",
+    "MISSING_PASSWORD" : "Debes ingresar una contraseña.",
+    "PASSWORD_MISMATCH" : "Las contraseñas no coinciden",
+    "INVALID_EMAIL": "El formato del correo electrónico no es válido.",
+}
+
 const SignupScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState("")
@@ -14,12 +23,25 @@ const SignupScreen = ({ navigation }) => {
 
     const [triggerSignup, result] = useSignupMutation()
 
+    const validateForm = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+        if (!email) return errorMessages.MISSING_EMAIL;
+        if (!emailRegex.test(email)) return errorMessages.INVALID_EMAIL;
+        if (!password) return errorMessages.MISSING_PASSWORD;
+        if (password.length < 6) return errorMessages.WEAK_PASSWORD;
+        if (password !== confirmPassword) return errorMessages.PASSWORD_MISMATCH;
+    
+        return null; 
+    }
+
     const onSubmit = ()=>{
-        setError("")
-        if (password !== confirmPassword) {
-            setError("Las contraseñas no coinciden")
-            return
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
+            return; 
         }
+        setError("");
         triggerSignup({email,password})
     }
 
@@ -27,7 +49,9 @@ const SignupScreen = ({ navigation }) => {
         if(result.status==="fulfilled"){
             navigation.navigate('Login')
         }else if(result.status==="rejected"){
-            setError(result.error.data.error.message)
+            const errorCode = result.error.data.error.message
+            const errorToShowMessage = errorMessages[errorCode] || "Ocurrió un error inesperado al registrarte."
+            setError(errorToShowMessage)
         }
     },[result])
 
