@@ -13,7 +13,7 @@ export default function ShopStackNavigator() {
     <Stack.Navigator
         initialRouteName='Categorías'
         screenOptions={{
-            header:({route})=><Header title="Mundo Geek" subtitle={route.name} />
+            header:({route})=><Header title="Rem Ecommerce" subtitle={route.name} />
         }}
         >
       <Stack.Screen 
