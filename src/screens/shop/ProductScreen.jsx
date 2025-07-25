@@ -78,14 +78,14 @@ const styles = StyleSheet.create({
     tagText: {
         fontWeight: '600',
         fontSize: 14,
-        color: colors.purple
+        color: colors.remGreenLight
     },
     price: {
         fontWeight: '800',
         fontSize: 18
     },
     discount: {
-        backgroundColor: colors.brightOrange,
+        backgroundColor: colors.remGreenLight,
         width: 52,
         height: 52,
         borderRadius: 52,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         verticalAlign: 'center'
     },
     noStockText: {
-        color: colors.red
+        color: colors.error
     },
     price: {
         fontSize: 24,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     addToCartButton: {
         padding: 8,
         paddingHorizontal: 16,
-        backgroundColor: colors.purple,
+        backgroundColor: colors.remGreenLight,
         borderRadius: 16,
         marginVertical: 16
     },

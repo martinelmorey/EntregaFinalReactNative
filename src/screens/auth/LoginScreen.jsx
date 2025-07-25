@@ -72,17 +72,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.purple
+        backgroundColor: colors.remGreenLight
     },
     title: {
-        color: colors.neonGreen,
+        color: colors.black,
         fontFamily: "PressStart2P",
         fontSize: 24
     },
     subTitle: {
         fontFamily: "Montserrat",
         fontSize: 18,
-        color: colors.yellow,
+        color: colors.warning,
         fontWeight: '700',
         letterSpacing: 3
     },
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     },
     error: {
         padding:16,
-        backgroundColor:colors.red,
+        backgroundColor:colors.error,
         borderRadius:8,
         color: colors.white
     }

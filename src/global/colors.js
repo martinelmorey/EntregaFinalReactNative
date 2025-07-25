@@ -1,13 +1,20 @@
 export const colors = {
-    "darkGray":"#3F3F3F",
-    "mediumGray":"#C6C6C6",
-    "lightGray":"#EBEBEB",
-    "white":"#FFF",
-    "black":"#000",
-    "cobaltBlue":"#0047AB",
-    "neonGreen":"#39FF14",
-    "purple":"#6A1B9A",
-    "yellow":"#FFEB3B",
-    "brightOrange":"#FF5722",
-    "red":"#cd3327"
-}
+    // Base
+    "white": "#FFFFFF",
+    "black": "#000000",
+  
+    // Grises
+    "darkGray": "#3F3F3F",
+    "mediumGray": "#C6C6C6",
+    "lightGray": "#EBEBEB",
+  
+    // Marca REM
+    "remGreen": "#00A651",     
+    "remGreenLight": "#3AC14D", 
+    
+    // Notificaciones
+    "success": "#39FF14",        
+    "warning": "#FFEB3B",       
+    "error": "#cd3327",         
+
+  }
