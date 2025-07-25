@@ -4,42 +4,42 @@ import { useEffect, useState } from 'react';
 import { useLoginMutation } from '../../services/auth/authApi';
 import { setUser } from '../../features/user/userSlice';
 import { useDispatch } from 'react-redux';
+import { loginSchema } from '../../validations/yupSchema';
+
 
 const textInputWidth = Dimensions.get('window').width * 0.7
 
-const errorMessages = {
-    "INVALID_LOGIN_CREDENTIALS": "El correo o la contraseña son incorrectos.",
-    "INVALID_EMAIL": "El formato del correo electrónico no es válido.",
-    "MISSING_EMAIL": "Debes ingresar un correo electrónico.",
-    "MISSING_PASSWORD": "Debes ingresar una contraseña."
-}
+
 
 const LoginScreen = ({ navigation, route }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
+    const [errorEmail, setErrorEmail] = useState("")
+    const [errorPassword, setErrorPassword] = useState("")
     const [triggerLogin, result] = useLoginMutation()
+    const { message } = route.params || ""
 
     const dispatch = useDispatch()
 
-    const onsubmit = ()=>{
-        const validationError = validateForm();
-        if (validationError) {
-            setError(validationError);
-            return; 
+    const onSubmit = () => {
+        try {
+            loginSchema.validateSync({ email, password })
+            setErrorEmail("")
+            setErrorPassword("")
+            triggerLogin({ email, password })
+        } catch (error) {
+            switch (error.path) {
+                case "email":
+                    setErrorEmail(error.message)
+                    break
+                case "password":
+                    setErrorPassword(error.message)
+                    break
+                default:
+                    break
+            }
         }
-        setError("");
-        triggerLogin({email,password})
-    }
-
-    const validateForm = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-        if (!email) return errorMessages.MISSING_EMAIL;
-        if (!emailRegex.test(email)) return errorMessages.INVALID_EMAIL;
-        if (!password) return errorMessages.MISSING_PASSWORD;
-    
-        return null; 
     }
     
     
@@ -47,9 +47,7 @@ const LoginScreen = ({ navigation, route }) => {
         if(result.status==="fulfilled"){
             dispatch(setUser({email: result.data.email, localId: result.data.localId}))
         }else if(result.status==="rejected"){
-            const errorCode = result.error.data.error.message
-            const errorToShowMessage = errorMessages[errorCode] || "Ocurrió un error inesperado. Inténtalo de nuevo."
-            setError(errorToShowMessage)
+            setError("Hubo un error al iniciar sesión")
         }
     },[result])
 
@@ -58,13 +56,21 @@ const LoginScreen = ({ navigation, route }) => {
         <View style={styles.container}>
             <Text style={styles.title}>Rem Ecommerce</Text>
             <Text style={styles.subTitle}>Inicia sesión</Text>
+
+            {message && <Text style={styles.message}>{message}</Text>}
+
             <View style={styles.inputContainer}>
+
+                {error && <Text style={styles.error}>{error}</Text>}
+
                 <TextInput
                     onChangeText={(text) => setEmail(text)}
                     placeholderTextColor={colors.white}
                     placeholder="Email"
                     style={styles.textInput}
                 />
+                {(errorEmail && !errorPassword) && <Text style={styles.error}>{errorEmail}</Text>}
+
                 <TextInput
                     onChangeText={(text) => setPassword(text)}
                     placeholderTextColor={colors.white}
@@ -72,6 +78,8 @@ const LoginScreen = ({ navigation, route }) => {
                     style={styles.textInput}
                     secureTextEntry
                 />
+                {errorPassword && <Text style={styles.error}>{errorPassword}</Text>}
+
             </View>
             <View style={styles.footTextContainer}>
                 <Text style={styles.whiteText}>¿No tienes una cuenta?</Text>
@@ -87,9 +95,7 @@ const LoginScreen = ({ navigation, route }) => {
                 </Pressable>
             </View>
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-
-            <Pressable style={styles.btn} onPress={onsubmit}><Text style={styles.btnText}>Iniciar sesión</Text></Pressable>
+            <Pressable style={styles.btn} onPress={onSubmit}><Text style={styles.btnText}>Iniciar sesión</Text></Pressable>
         </View>
     )
 }
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
     subTitle: {
         fontFamily: "Montserrat",
         fontSize: 18,
-        color: colors.warning,
+        color: colors.black,
         fontWeight: '700',
         letterSpacing: 3
     },
@@ -159,6 +165,12 @@ const styles = StyleSheet.create({
     error: {
         padding: 16,
         backgroundColor: colors.error,
+        borderRadius: 8,
+        color: colors.white
+    },
+    message: {
+        padding: 16,
+        backgroundColor: colors.success,
         borderRadius: 8,
         color: colors.white
     }
