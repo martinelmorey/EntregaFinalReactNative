@@ -18,7 +18,7 @@ export default function ShopStackNavigator() {
         }}
         >
       <Stack.Screen 
-        name="Categorías" 
+        name="Categorías"
         component={CategoriesScreen} 
     />
       <Stack.Screen name="SubCategoriesScreen" component={SubCategoriesScreen} />

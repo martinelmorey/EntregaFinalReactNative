@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Pressable, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, Dimensions, Image } from 'react-native'
 import { colors } from '../../global/colors';
 import { useEffect, useState } from 'react';
 import { useLoginMutation } from '../../services/auth/authApi';
@@ -54,7 +54,11 @@ const LoginScreen = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Rem Ecommerce</Text>
+            <Image 
+                source={require('../../assets/logo_rem.png')} 
+                style={styles.logo} 
+                resizeMode="contain"
+            />
             <Text style={styles.subTitle}>Inicia sesión</Text>
 
             {message && <Text style={styles.message}>{message}</Text>}
@@ -109,10 +113,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: colors.remGreenLight
     },
-    title: {
-        color: colors.black,
-        fontFamily: "PressStart2P",
-        fontSize: 24
+    logo:{
+        width:150,
+        height:150
     },
     subTitle: {
         fontFamily: "Montserrat",

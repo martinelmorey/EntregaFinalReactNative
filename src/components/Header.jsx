@@ -1,17 +1,21 @@
-import { StyleSheet, Text, View,Pressable } from 'react-native'
+import { StyleSheet, Text, View,Pressable,Image } from 'react-native'
 import { colors } from '../global/colors'
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/Feather'
 
 
 
-const Header = ({title,subtitle}) => {
+const Header = ({subtitle}) => {
   const navigation = useNavigation()
   const canGoBack = navigation.canGoBack()
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      <Image 
+        source={require('../assets/logo_rem.png')} 
+        style={styles.logo} 
+        resizeMode="contain"
+      />
       <Text style={styles.subtitle}>{subtitle}</Text>
       {
         canGoBack &&
@@ -30,12 +34,11 @@ const styles = StyleSheet.create({
         height:200,
         justifyContent:"center",
         alignItems:"center",
-        backgroundColor:colors.darkGray
+        backgroundColor:colors.black
     },
-    title:{
-        fontSize:24,
-        color:colors.white,
-        fontFamily:'PressStart2P'
+    logo:{
+        width:150,
+        height:150
     },
     subtitle:{
       fontSize:16,

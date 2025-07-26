@@ -16,19 +16,16 @@ const ProductsScreen = ({ navigation }) => {
   const subcategorySlug = useSelector(s => s.shopReducer.subcategorySelected)
   const parentCategorySlug = useSelector(s => s.shopReducer.parentCategorySlug)
 
-  // 1) Subcategoría
   const { data: bySub = [], isLoading: lSub } =
     useGetProductsBySubcategoryQuery(subcategorySlug || '', {
       skip: !subcategorySlug,
     })
 
-  // 2) Categoría (leaf)
   const { data: byCatLeaf = [], isLoading: lCatLeaf } =
     useGetProductsByCategoryQuery(categorySlug || '', {
       skip: !categorySlug,
     })
 
-  // 3) Categoría (parent)
   const { data: byCatParent = [], isLoading: lCatParent } =
     useGetProductsByCategoryQuery(parentCategorySlug || '', {
       skip: !parentCategorySlug,
