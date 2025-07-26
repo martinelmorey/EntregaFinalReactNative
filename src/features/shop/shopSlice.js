@@ -1,30 +1,41 @@
-import { createSlice, current } from "@reduxjs/toolkit";
-import categories from "../../data/categories.json"
-import products from "../../data/products.json"
+// shopSlice.ts
+import { createSlice } from "@reduxjs/toolkit";
 
 const shopSlice = createSlice({
-    name:"shop",
-    initialState:{
-        categories,
-        products,
-        categorySelected:"",
-        productsFilteredByCategory: [],
-        productSelected: {}
+  name: "shop",
+  initialState: {
+    categorySelected: "",
+    subcategorySelected: "",
+    parentCategorySlug: "",
+    productSelected: {},
+  },
+  reducers: {
+    setCategorieSelected: (state, action) => {
+      state.categorySelected = action.payload;
     },
-    reducers:{
-        setCategorieSelected: (state,action)=>{
-            state.categorySelected = action.payload
-            console.log(current(state).categorySelected)
-        },
-        filterProducts: (state,action)=>{
-            state.productsFilteredByCategory = products.filter(product=>product.category.toLowerCase()===state.categorySelected.toLowerCase())
-        },
-        setProductSelect: (state,action)=>{
-            state.productSelected=action.payload
-        }
-    }
-})
+    setSubCategorySelected: (state, action) => {
+      state.subcategorySelected = action.payload;
+    },
+    setParentCategorySlug: (state, action) => {
+      state.parentCategorySlug = action.payload;
+    },
+    setProductSelect: (state, action) => {
+      state.productSelected = action.payload;
+    },
+    resetSelections: (state) => {
+      state.categorySelected = "";
+      state.subcategorySelected = "";
+      state.parentCategorySlug = "";
+    },
+  },
+});
 
-export const {setCategorieSelected,filterProducts,setProductSelect} = shopSlice.actions
+export const {
+  setCategorieSelected,
+  setSubCategorySelected,
+  setParentCategorySlug,
+  setProductSelect,
+  resetSelections,
+} = shopSlice.actions;
 
-export default shopSlice.reducer
+export default shopSlice.reducer;

@@ -1,62 +1,73 @@
-import { StyleSheet, Text, View, FlatList,Pressable } from 'react-native'
-//import products from '../../data/products.json'
-import FlatCard from '../../components/FlatCard'
-import { colors } from '../../global/colors'
-import { useEffect, useState } from 'react'
-import Search from '../../components/Search'
+import { StyleSheet, Text, Pressable, FlatList } from 'react-native'
+import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useGetProductsByCategoryQuery } from '../../services/shop/shopApi'
-
+import FlatCard from '../../components/FlatCard'
+import Search from '../../components/Search'
+import {
+  useGetProductsByCategoryQuery,
+  useGetProductsBySubcategoryQuery,
+} from '../../services/shop/shopApi'
 
 const ProductsScreen = ({ navigation }) => {
-    const [productsFiltered, setProductsFiltered] = useState([])
-    const [keyword, setKeyword] = useState("")
+  const [keyword, setKeyword] = useState('')
+  const [productsFiltered, setProductsFiltered] = useState([])
 
-    const products = useSelector(state=>state.shopReducer.products)
-    const category = useSelector(state=>state.shopReducer.categorySelected)
+  const categorySlug = useSelector(s => s.shopReducer.categorySelected)
+  const subcategorySlug = useSelector(s => s.shopReducer.subcategorySelected)
+  const parentCategorySlug = useSelector(s => s.shopReducer.parentCategorySlug)
 
-    //const productsFilteredByCategory = useSelector(state=>state.shopReducer.productsFilteredByCategory)
+  // 1) Subcategoría
+  const { data: bySub = [], isLoading: lSub } =
+    useGetProductsBySubcategoryQuery(subcategorySlug || '', {
+      skip: !subcategorySlug,
+    })
 
-    const {data: productsFilteredByCategory, isLoading, error} = useGetProductsByCategoryQuery(category.toLowerCase())
-    //console.log(productsFilteredByCategory)
+  // 2) Categoría (leaf)
+  const { data: byCatLeaf = [], isLoading: lCatLeaf } =
+    useGetProductsByCategoryQuery(categorySlug || '', {
+      skip: !categorySlug,
+    })
 
-    //console.log(route)
-    //const { category } = route.params
+  // 3) Categoría (parent)
+  const { data: byCatParent = [], isLoading: lCatParent } =
+    useGetProductsByCategoryQuery(parentCategorySlug || '', {
+      skip: !parentCategorySlug,
+    })
 
-    useEffect(() => {
-        /* const productsFilteredByCategory = products.filter(
-            product => product.category.toLowerCase() === category.toLowerCase()
-        ) */
-        if (keyword) {
-            const productsFilteredByKeyword = productsFilteredByCategory.filter(
-                product => product.title.toLowerCase().includes(keyword.toLowerCase())
-            )
-            setProductsFiltered(productsFilteredByKeyword)
-        } else {
-            setProductsFiltered(productsFilteredByCategory)
-        }
-    }, [category, keyword,productsFilteredByCategory])
+  const baseList = useMemo(() => {
+    if (subcategorySlug && bySub.length) return bySub
+    if (byCatLeaf.length) return byCatLeaf
+    if (byCatParent.length) return byCatParent
+    return []
+  }, [subcategorySlug, bySub, byCatLeaf, byCatParent])
 
-    const renderProductItem = ({ item }) => (
-        <Pressable onPress={()=>navigation.navigate("Producto",{product:item})}>
-            <FlatCard>
-                <Text>{item.title}</Text>
-            </FlatCard>
-        </Pressable>
+  useEffect(() => {
+    if (keyword) {
+      const k = keyword.toLowerCase()
+      setProductsFiltered(baseList.filter(p => p.title?.toLowerCase().includes(k)))
+    } else {
+      setProductsFiltered(baseList)
+    }
+  }, [keyword, baseList])
 
-    )
+  const renderProductItem = ({ item }) => (
+    <Pressable onPress={() => navigation.navigate('Producto', { product: item })}>
+      <FlatCard>
+        <Text>{item.title}</Text>
+      </FlatCard>
+    </Pressable>
+  )
 
-    return (
-        <>
-            <Search keyword={keyword} setKeyword={setKeyword} />
-            <FlatList
-                data={productsFiltered}
-                renderItem={renderProductItem}
-                keyExtractor={item => item.id}
-            />
-        </>
-
-    )
+  return (
+    <>
+      <Search keyword={keyword} setKeyword={setKeyword} />
+      <FlatList
+        data={productsFiltered}
+        renderItem={renderProductItem}
+        keyExtractor={item => String(item.id)}
+      />
+    </>
+  )
 }
 
 export default ProductsScreen
