@@ -51,7 +51,7 @@ const ProductsScreen = ({ navigation }) => {
   }, [keyword, baseList])
 
   const renderProductItem = ({ item }) => (
-    <Pressable onPress={() => navigation.navigate('Producto', { product: item })}>
+    <Pressable onPress={() => navigation.navigate('ProductScreen', { product: item })}>
       <FlatCard>
         <Text>{item.title}</Text>
       </FlatCard>

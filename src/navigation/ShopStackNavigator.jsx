@@ -21,9 +21,9 @@ export default function ShopStackNavigator() {
         name="Categorías" 
         component={CategoriesScreen} 
     />
-      <Stack.Screen name="Subcategorias" component={SubCategoriesScreen} />
+      <Stack.Screen name="SubCategoriesScreen" component={SubCategoriesScreen} />
       <Stack.Screen name="ProductsScreen" component={ProductsScreen} />
-      <Stack.Screen name="Producto" component={ProductScreen} />
+      <Stack.Screen name="ProductScreen" component={ProductScreen} />
     </Stack.Navigator>
   );
 }
