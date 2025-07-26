@@ -8,10 +8,14 @@ import { usePutProfilePictureMutation } from '../../services/user/userApi';
 import { setProfilePicture } from '../../features/user/userSlice';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { useSQLiteContext } from 'expo-sqlite';
+import { clearUser } from '../../features/user/userSlice';
+import { Ionicons } from 'react-native-vector-icons';
+
 
 
 const ProfileScreen = () => {
-    //const [image, setImage] = useState("")
+    const db = useSQLiteContext()
     const user = useSelector(state => state.userReducer.userEmail)
     const localId = useSelector(state => state.userReducer.localId)
     const image = useSelector(state => state.userReducer.profilePicture)
@@ -23,7 +27,6 @@ const ProfileScreen = () => {
     const dispatch = useDispatch()
 
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
@@ -32,24 +35,29 @@ const ProfileScreen = () => {
             base64: true
         });
 
-        //console.log(result);
 
         if (!result.canceled) {
             const imgBase64 = `data:image/jpeg;base64,${result.assets[0].base64}`
             dispatch(setProfilePicture(imgBase64))
             triggerPutProfilePicture({ localId: localId, image: imgBase64 })
-            //setImage(result.assets[0].uri);
-
         }
     };
+
+    const logout = async () => {
+        try {
+            const result = await db.runAsync('DELETE FROM sessions WHERE localId = $localId', {$localId: localId})
+            console.log("Sesion cerrada", result)
+            dispatch(clearUser())
+        } catch (error) {
+            console.log("Error cerrando sesion", error)
+        }
+    }
 
     useEffect(() => {
         async function getCurrentLocation() {
             try {
-                //Pido permisos:
                 let { status } = await Location.requestForegroundPermissionsAsync();
                 if (status !== 'granted') {
-                    console.log("Error al obtener los permisos")
                     setLocationLoaded(true);
                     return;
                 }
@@ -61,9 +69,7 @@ const ProfileScreen = () => {
                         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.coords.latitude},${location.coords.longitude}&key=${process.env.EXPO_PUBLIC_GMAPS_API_KEY}`
                     );
                     const data = await response.json()
-                    //console.log(data)
                     setAddress(data.results[0].formatted_address)
-                    //console.log("Location:",location)
                     setLocation(location);
                 }
             } catch (error) {
@@ -126,6 +132,10 @@ const ProfileScreen = () => {
                     <Text style={styles.address}>{address || ""}</Text>
                 </View>
             </View>
+            <Pressable onPress={logout} style={({pressed}) => [{opacity: pressed ? 0.9 : 1}, styles.logoutButton]}>
+                <Ionicons name="log-out-outline" size={24} color={styles.logoutText.color || "white"} />
+                <Text style={styles.logoutText}>Cerrar sesión</Text>
+            </Pressable>
         </View>
     )
 }
@@ -133,6 +143,23 @@ const ProfileScreen = () => {
 export default ProfileScreen
 
 const styles = StyleSheet.create({
+    logoutButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.remGreenDark,
+        padding: 12,
+        borderRadius: 10,
+        marginTop: 20,
+        width: '80%',
+        alignSelf: 'center'
+    },
+    logoutText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginLeft: 8
+    },
     profileContainer: {
         paddingTop: 32,
         justifyContent: 'center',

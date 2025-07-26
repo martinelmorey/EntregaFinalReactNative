@@ -5,13 +5,12 @@ import { useLoginMutation } from '../../services/auth/authApi';
 import { setUser } from '../../features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { loginSchema } from '../../validations/yupSchema';
-
+import {useSQLiteContext} from 'expo-sqlite';
 
 const textInputWidth = Dimensions.get('window').width * 0.7
 
-
-
 const LoginScreen = ({ navigation, route }) => {
+    const db = useSQLiteContext()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
@@ -19,8 +18,39 @@ const LoginScreen = ({ navigation, route }) => {
     const [errorPassword, setErrorPassword] = useState("")
     const [triggerLogin, result] = useLoginMutation()
     const { message } = route.params || ""
-
     const dispatch = useDispatch()
+
+    useEffect(()=>{
+        async function setup(){
+            const sessions = await db.getAllSync('SELECT * FROM sessions LIMIT 1')
+            const session = sessions[0]
+            if(session.email){
+                dispatch(setUser({email: session.email, localId: session.localId}))
+            }
+        }
+        setup()
+    },[])
+
+    const saveUserInDB = async (email, localId) => {
+        try {
+            if (!db) {
+                console.log("Base de datos no inicializada")
+                return
+            }
+            
+            if (!db.runAsync) {
+                if (db.exec) {
+                    await db.exec(`INSERT INTO sessions (email, localId) VALUES ('${email}', '${localId}')`)
+                    return
+                }
+            } else {
+                const result = await db.runAsync('INSERT INTO sessions (email, localId) VALUES (?, ?)', email, localId)
+                console.log("Usuario guardado en DB", result)
+            }
+        } catch (error) {
+            console.log("Error guardando usuario en DB", error)
+        }
+    }
 
     const onSubmit = () => {
         try {
@@ -44,11 +74,15 @@ const LoginScreen = ({ navigation, route }) => {
     
     
     useEffect(()=>{
-        if(result.status==="fulfilled"){
-            dispatch(setUser({email: result.data.email, localId: result.data.localId}))
-        }else if(result.status==="rejected"){
-            setError("Hubo un error al iniciar sesión")
+        async function saveUser(){
+            if(result.status==="fulfilled"){
+                dispatch(setUser({email: result.data.email, localId: result.data.localId}))
+                saveUserInDB(result.data.email, result.data.localId)
+            }else if(result.status==="rejected"){
+                setError("Hubo un error al iniciar sesión")
+            }
         }
+        saveUser()
     },[result])
 
 

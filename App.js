@@ -1,12 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import TabNavigator from './src/navigation/TabNavigator';
 import { Provider } from 'react-redux';
 import store from './src/store';
 import MainNavigator from './src/navigation/MainNavigator';
+import { SQLiteProvider } from 'expo-sqlite';
+
+
+
+export const initializeDB = async (db) => {
+  try {
+    await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id INTEGER PRIMARY KEY NOT NULL,
+        email TEXT NOT NULL,
+        localId TEXT NOT NULL
+      );
+    `);
+    console.log("Base de datos inicializada");
+  } catch (error) {
+    console.log("Error al inicializar la base de datos", error);
+  }
+};
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,10 +48,12 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
+    <SQLiteProvider databaseName="user.db" onInit={initializeDB}>
+      <Provider store={store}>
         <StatusBar style="light" />
         <MainNavigator />
-    </Provider>
+      </Provider>
+    </SQLiteProvider>
   );
 }
 
