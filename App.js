@@ -29,12 +29,11 @@ export const initializeDB = async (db) => {
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [loaded, error] = useFonts({
-    'Karla-Regular': require('./assets/fonts/Karla-Regular.ttf'),
-    'Karla-Bold': require('./assets/fonts/Karla-Bold.ttf'),
-    'Karla-Italic': require('./assets/fonts/Karla-Italic.ttf'),
-    'Karla-Light': require('./assets/fonts/Karla-Light.ttf'),
-    'PressStart2P': require('./assets/fonts/PressStart2P-Regular.ttf'),
+  const [loaded, error] = useFonts({    
+    'Ubuntu-Regular': require('./assets/fonts/Ubuntu-Regular.ttf'),
+    'Ubuntu-Bold': require('./assets/fonts/Ubuntu-Bold.ttf'),
+    'Ubuntu-Light': require('./assets/fonts/Ubuntu-Light.ttf'),
+    'Ubuntu-Medium': require('./assets/fonts/Ubuntu-Medium.ttf'),
   });
 
   useEffect(() => {

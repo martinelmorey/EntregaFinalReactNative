@@ -1,7 +1,7 @@
 // screens/CategoriesScreen.tsx
 import { StyleSheet, View, Image, Pressable, FlatList } from 'react-native'
 import FlatCard from '../../components/FlatCard'
-import TextKarlaRegular from '../../components/TextKarlaRegular'
+import TextUbuntuRegular from '../../components/TextUbuntuRegular'
 import { useDispatch } from 'react-redux'
 import { setCategorieSelected } from '../../features/shop/shopSlice'
 import { useGetCategoriesQuery } from '../../services/shop/shopApi'
@@ -19,7 +19,7 @@ const CategoriesScreen = ({ navigation }) => {
     <Pressable onPress={() => onPressCategory(item)}>
       <FlatCard>
         <View style={styles.categoryContainer}>
-          <TextKarlaRegular>{item.title}</TextKarlaRegular>
+          <TextUbuntuRegular>{item.title}</TextUbuntuRegular>
           {!!item.image && <Image width={80} height={40} source={{ uri: item.image }} />}
         </View>
       </FlatCard>
