@@ -12,7 +12,7 @@ const CategoriesScreen = ({ navigation }) => {
 
   const onPressCategory = (item) => {
     dispatch(setCategorieSelected(item.slug))
-    navigation.navigate("SubCategoriesScreen", { category: item }) // ← pantalla intermedia
+    navigation.navigate("Sub Categorías", { category: item }) // ← pantalla intermedia
   }
 
   const renderCategoryItem = ({ item }) => (

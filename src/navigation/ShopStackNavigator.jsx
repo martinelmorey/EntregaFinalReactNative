@@ -17,13 +17,10 @@ export default function ShopStackNavigator() {
             header:({route})=><Header title="Rem Ecommerce" subtitle={route.name} />
         }}
         >
-      <Stack.Screen 
-        name="Categorías"
-        component={CategoriesScreen} 
-    />
-      <Stack.Screen name="SubCategoriesScreen" component={SubCategoriesScreen} />
-      <Stack.Screen name="ProductsScreen" component={ProductsScreen} />
-      <Stack.Screen name="ProductScreen" component={ProductScreen} />
+      <Stack.Screen name="Categorías" component={CategoriesScreen} />
+      <Stack.Screen name="Sub Categorías" component={SubCategoriesScreen} />
+      <Stack.Screen name="Productos" component={ProductsScreen} />
+      <Stack.Screen name="Producto" component={ProductScreen} />
     </Stack.Navigator>
   );
 }

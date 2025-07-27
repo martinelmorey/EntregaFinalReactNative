@@ -26,7 +26,7 @@ const SubCategoriesScreen = ({ route, navigation }) => {
     dispatch(setCategorieSelected(sub.slug))       // candidato a categoría
     dispatch(setParentCategorySlug(parentSlug))    // por si los productos están en el padre
 
-    navigation.navigate('ProductsScreen')
+    navigation.navigate('Productos')
   }
 
 
