@@ -1,14 +1,13 @@
-import { StyleSheet, Text, Pressable, FlatList } from 'react-native'
+import { StyleSheet, Text, Pressable, FlatList, Image, useWindowDimensions } from 'react-native'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import FlatCard from '../../components/FlatCard'
 import Search from '../../components/Search'
-import {
-  useGetProductsByCategoryQuery,
-  useGetProductsBySubcategoryQuery,
-} from '../../services/shop/shopApi'
+import { useGetProductsByCategoryQuery, useGetProductsBySubcategoryQuery } from '../../services/shop/shopApi'
+
 
 const ProductsScreen = ({ navigation }) => {
+  const { width } = useWindowDimensions()
   const [keyword, setKeyword] = useState('')
   const [productsFiltered, setProductsFiltered] = useState([])
 
@@ -50,6 +49,13 @@ const ProductsScreen = ({ navigation }) => {
   const renderProductItem = ({ item }) => (
     <Pressable onPress={() => navigation.navigate('Producto', { product: item })}>
       <FlatCard>
+        <Image
+            source={{ uri: item.mainImage }}
+            alt={item.title}
+            width='100%'
+            height={width * 1}
+            resizeMode='contain'
+        />
         <Text>{item.title}</Text>
       </FlatCard>
     </Pressable>

@@ -1,15 +1,31 @@
 import { StyleSheet, Text, View, Pressable, Image, ScrollView, useWindowDimensions } from 'react-native'
+import { useState } from 'react';
 import { colors } from '../../global/colors';
 import { useDispatch } from 'react-redux';
 import { addItems } from '../../features/cart/cartSlice';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
 
 const ProductScreen = ({ route }) => {
     const { product } = route.params
     const { width } = useWindowDimensions()
-
-    console.log(product)
+    const [quantity, setQuantity] = useState(1)
  
     const dispatch = useDispatch()
+
+    const incrementQuantity = () => {
+        if (quantity < product.stock) {
+            setQuantity(quantity + 1)
+        }
+    }
+    
+    const decrementQuantity = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1)
+        }
+    }
+
+
     return (
         <ScrollView style={styles.productContainer}>
             <Text style={styles.textBrand}>{product.brand}</Text>
@@ -24,10 +40,12 @@ const ProductScreen = ({ route }) => {
             <Text style={styles.shortDescription}>{product.shortDescription}</Text>
             <View style={styles.tagsContainer}>
                 <View style={styles.tags}>
-                    <Text style={styles.tagText}>Tags : </Text>
-                    {
-                        product.tags?.map(tag => <Text key={Math.random()} style={styles.tagText}>{tag}</Text>)
-                    }
+                    <Text style={styles.tagLabel}>Tags: </Text>
+                    <View style={styles.tagsList}>
+                        {
+                            product.tags?.map(tag => <Text key={Math.random()} style={styles.tagText}>{tag}</Text>)
+                        }
+                    </View>
                 </View>
 
                 {
@@ -38,9 +56,41 @@ const ProductScreen = ({ route }) => {
                 product.stock <= 0 && <Text style={styles.noStockText}>Sin Stock</Text>
             }
             <Text style={styles.price}>Precio: ${product.price}</Text>
+
+            {product.stock > 0 && (
+                <View style={styles.quantityContainer}>
+                    <Text style={styles.quantityLabel}>Cantidad:</Text>
+                    <View style={styles.quantitySelector}>
+                        <Pressable 
+                            style={({pressed}) => [
+                                {opacity: pressed ? 0.7 : 1},
+                                styles.quantityButton
+                            ]}
+                            onPress={decrementQuantity}
+                        >
+                            <Ionicons name="remove" size={24} color="white" />
+                        </Pressable>
+                        
+                        <Text style={styles.quantityText}>{quantity}</Text>
+                        
+                        <Pressable 
+                            style={({pressed}) => [
+                                {opacity: pressed ? 0.7 : 1},
+                                styles.quantityButton
+                            ]}
+                            onPress={incrementQuantity}
+                        >
+                            <Ionicons name="add" size={24} color="white" />
+                        </Pressable>
+                    </View>
+                </View>
+            )}
+            
             <Pressable
                 style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToCartButton]}
-                onPress={()=>dispatch(addItems({product:product,quantity:1}))}>
+                onPress={() => dispatch(addItems({product: product, quantity: quantity}))}
+                disabled={product.stock <= 0}
+            >
                 <Text style={styles.textAddToCart}>Agregar al carrito</Text>
             </Pressable>
         </ScrollView>
@@ -71,20 +121,36 @@ const styles = StyleSheet.create({
     },
     tagsContainer: {
         flexDirection: 'row',
-        gap: 5,
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginVertical: 8
     },
     tags: {
+        flex: 1,
+        marginRight: 10
+    },
+    tagsList: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         gap: 5,
+    },
+    tagLabel: {
+        fontWeight: '600',
+        fontSize: 14,
+        color: colors.remGreenLight,
+        fontFamily:'Ubuntu-Medium',
+        marginBottom: 5
     },
     tagText: {
         fontWeight: '600',
         fontSize: 14,
         color: colors.remGreenLight,
-        fontFamily:'Ubuntu-Medium'
+        fontFamily:'Ubuntu-Medium',
+        backgroundColor: 'rgba(0, 128, 0, 0.1)',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 10,
+        marginBottom: 5
     },
     price: {
         fontWeight: '800',
@@ -126,5 +192,35 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontFamily:'Ubuntu-Medium',
         textAlign: 'center',
-    }
+    },
+    quantityContainer: {
+        alignItems: 'center',
+        marginVertical: 10
+    },
+    quantityLabel: {
+        fontSize: 16,
+        fontFamily: 'Ubuntu-Medium',
+        marginBottom: 8
+    },
+    quantitySelector: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 10
+    },
+    quantityButton: {
+        backgroundColor: colors.remGreenLight,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    quantityText: {
+        fontSize: 18,
+        fontFamily: 'Ubuntu-Bold',
+        marginHorizontal: 20,
+        minWidth: 30,
+        textAlign: 'center'
+    },
 })
