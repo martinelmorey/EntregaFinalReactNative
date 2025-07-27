@@ -97,7 +97,7 @@ const LoginScreen = ({ navigation, route }) => {
         style={styles.container}
         >
             <Image 
-                source={require('../../assets/logo_rem.png')} 
+                source={require('../../../assets/logo_rem.png')} 
                 style={styles.logo} 
                 resizeMode="contain"
             />

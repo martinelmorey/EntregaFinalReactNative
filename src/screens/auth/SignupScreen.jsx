@@ -67,7 +67,7 @@ const SignupScreen = ({ navigation }) => {
             <AnimatedError message={error} />
 
             <Image 
-                source={require('../../assets/logo_rem.png')} 
+                source={require('../../../assets/logo_rem.png')} 
                 style={styles.logo} 
                 resizeMode="contain"
             />

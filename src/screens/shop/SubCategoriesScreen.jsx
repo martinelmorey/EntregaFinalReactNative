@@ -17,14 +17,13 @@ const SubCategoriesScreen = ({ route, navigation }) => {
   const onPressSubcat = (sub) => {
     const hasChildren = sub.subcategories && Object.keys(sub.subcategories).length > 0
     if (hasChildren) {
-      navigation.push('SubCategoriesScreen', { category: sub })
+      navigation.push('Sub Categorías', { category: sub })
       return
     }
 
-    // Guardamos candidatos sin hardcodear
-    dispatch(setSubCategorySelected(sub.slug))     // candidato a sub
-    dispatch(setCategorieSelected(sub.slug))       // candidato a categoría
-    dispatch(setParentCategorySlug(parentSlug))    // por si los productos están en el padre
+    dispatch(setSubCategorySelected(sub.slug))    
+    dispatch(setCategorieSelected(sub.slug))      
+    dispatch(setParentCategorySlug(parentSlug))   
 
     navigation.navigate('Productos')
   }

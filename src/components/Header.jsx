@@ -12,7 +12,7 @@ const Header = ({subtitle}) => {
   return (
     <View style={styles.container}>
       <Image 
-        source={require('../assets/logo_rem.png')} 
+        source={require('../../assets/logo_rem.png')} 
         style={styles.logo} 
         resizeMode="contain"
       />
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     subtitle:{
       fontSize:16,
       color:colors.white,
+      fontFamily:'Ubuntu-Bold'
     },
     goBack:{
       position:"absolute",

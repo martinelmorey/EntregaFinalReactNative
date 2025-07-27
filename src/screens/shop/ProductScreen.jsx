@@ -7,6 +7,8 @@ const ProductScreen = ({ route }) => {
     const { product } = route.params
     const { width } = useWindowDimensions()
 
+    console.log(product)
+ 
     const dispatch = useDispatch()
     return (
         <ScrollView style={styles.productContainer}>
@@ -16,10 +18,10 @@ const ProductScreen = ({ route }) => {
                 source={{ uri: product.mainImage }}
                 alt={product.title}
                 width='100%'
-                height={width * .7}
+                height={width * 1}
                 resizeMode='contain'
             />
-            <Text style={styles.longDescription}>{product.longDescription}</Text>
+            <Text style={styles.shortDescription}>{product.shortDescription}</Text>
             <View style={styles.tagsContainer}>
                 <View style={styles.tags}>
                     <Text style={styles.tagText}>Tags : </Text>
@@ -54,15 +56,18 @@ const styles = StyleSheet.create({
     },
     textBrand: {
         color: colors.grisOscuro,
+        fontFamily:'Ubuntu-Bold'
     },
     textTitle: {
         fontSize: 24,
-        fontWeight: '700'
+        fontWeight: '700',
+        fontFamily:'Ubuntu-Bold'
     },
-    longDescription: {
+    shortDescription: {
         fontSize: 16,
         textAlign: 'justify',
         paddingVertical: 8,
+        fontFamily:'Ubuntu-Regular'
     },
     tagsContainer: {
         flexDirection: 'row',
@@ -78,11 +83,13 @@ const styles = StyleSheet.create({
     tagText: {
         fontWeight: '600',
         fontSize: 14,
-        color: colors.remGreenLight
+        color: colors.remGreenLight,
+        fontFamily:'Ubuntu-Medium'
     },
     price: {
         fontWeight: '800',
-        fontSize: 18
+        fontSize: 18,
+        fontFamily:'Ubuntu-Medium'
     },
     discount: {
         backgroundColor: colors.remGreenLight,
@@ -104,7 +111,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '700',
         alignSelf: 'center',
-        paddingVertical: 16
+        paddingVertical: 16,
+        fontFamily:'Ubuntu-Medium'
     },
     addToCartButton: {
         padding: 8,
@@ -116,6 +124,7 @@ const styles = StyleSheet.create({
     textAddToCart: {
         color: colors.white,
         fontSize: 24,
+        fontFamily:'Ubuntu-Medium',
         textAlign: 'center',
     }
 })
