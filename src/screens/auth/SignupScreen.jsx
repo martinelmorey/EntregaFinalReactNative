@@ -1,8 +1,11 @@
-import { StyleSheet, Text, View, TextInput, Pressable, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, Dimensions, Image } from 'react-native'
 import { colors } from '../../global/colors'
 import { useEffect, useState } from 'react';
 import { useSignupMutation } from '../../services/auth/authApi';
 import { signupSchema } from '../../validations/yupSchema';
+import {LinearGradient} from 'expo-linear-gradient'
+import AnimatedError from '../../components/AnimatedError';
+
 
 
 const textInputWidth = Dimensions.get('window').width * 0.7
@@ -55,39 +58,47 @@ const SignupScreen = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.gradient}>
+        <LinearGradient
+        colors={[colors.black, colors.remGreenLight]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.container}
+        >
+            <AnimatedError message={error} />
 
-            {error && <Text style={styles.error}>{error}</Text>}
-
-            <Text style={styles.title}>Rem Ecommerce</Text>
+            <Image 
+                source={require('../../assets/logo_rem.png')} 
+                style={styles.logo} 
+                resizeMode="contain"
+            />
             <Text style={styles.subTitle}>Registrate</Text>
             <View style={styles.inputContainer}>
 
                 <TextInput
                     onChangeText={(text) => setEmail(text)}
-                    placeholderTextColor={colors.white}
+                    placeholderTextColor={colors.darkGray}
                     placeholder="Email"
                     style={styles.textInput}
                 />
-                {(errorEmail && !errorPassword) && <Text style={styles.error}>{errorEmail}</Text>}
+                {(errorEmail && !errorPassword) && <AnimatedError message={errorEmail} />}
 
                 <TextInput
                     onChangeText={(text) => setPassword(text)}
-                    placeholderTextColor={colors.white}
+                    placeholderTextColor={colors.darkGray}
                     placeholder='Password'
                     style={styles.textInput}
                     secureTextEntry
                 />
-                {errorPassword && <Text style={styles.error}>{errorPassword}</Text>}
+                {errorPassword && <AnimatedError message={errorPassword} />}
 
                 <TextInput
                     onChangeText={(text) => setConfirmPassword(text)}
-                    placeholderTextColor={colors.white}
+                    placeholderTextColor={colors.darkGray}
                     placeholder='Repetir password'
                     style={styles.textInput}
                     secureTextEntry
                 />
-                {errorConfirmPassword && <Text style={styles.error}>{errorConfirmPassword}</Text>}
+                {errorConfirmPassword && <AnimatedError message={errorConfirmPassword} />}
 
             </View>
             <View style={styles.footTextContainer}>
@@ -106,30 +117,27 @@ const SignupScreen = ({ navigation }) => {
 
             <Pressable style={styles.btn} onPress={onSubmit}><Text style={styles.btnText}>Crear cuenta</Text></Pressable>
 
-        </View>
+        </LinearGradient>
     )
 }
 
 export default SignupScreen
 
 const styles = StyleSheet.create({
-    gradient: {
+    container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.remGreenLight
-    },
-    title: {
-        color: colors.remGreenLight,
-        fontFamily: "PressStart2P",
-        fontSize: 24
     },
     subTitle: {
-        fontFamily: "Montserrat",
         fontSize: 18,
-        color: colors.warning,
+        color: colors.white,
         fontWeight: '700',
         letterSpacing: 3
+    },
+    logo:{
+        width:150,
+        height:150
     },
     inputContainer: {
         gap: 16,
@@ -141,10 +149,10 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 8,
         paddingLeft: 16,
-        borderRadius: 16,
-        backgroundColor: colors.darkGray,
+        borderRadius: 5,
+        backgroundColor: colors.white,
         width: textInputWidth,
-        color: colors.white,
+        color: colors.black,
     },
     footTextContainer: {
         flexDirection: 'row',
@@ -164,18 +172,12 @@ const styles = StyleSheet.create({
         padding: 16,
         paddingHorizontal: 32,
         backgroundColor: colors.black,
-        borderRadius: 16,
+        borderRadius: 5,
         marginTop: 32
     },
     btnText: {
         color: colors.white,
         fontSize: 16,
-        fontWeight: '700'
-    },
-    error: {
-        padding:16,
-        backgroundColor:colors.error,
-        borderRadius:8,
-        color: colors.white
+        fontWeight: '500'
     }
 })

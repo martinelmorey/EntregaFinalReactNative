@@ -6,6 +6,9 @@ import { setUser } from '../../features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { loginSchema } from '../../validations/yupSchema';
 import {useSQLiteContext} from 'expo-sqlite';
+import {LinearGradient} from 'expo-linear-gradient'
+import AnimatedError from '../../components/AnimatedError';
+
 
 const textInputWidth = Dimensions.get('window').width * 0.7
 
@@ -87,7 +90,12 @@ const LoginScreen = ({ navigation, route }) => {
 
 
     return (
-        <View style={styles.container}>
+        <LinearGradient
+        colors={[colors.black, colors.remGreenLight]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.container}
+        >
             <Image 
                 source={require('../../assets/logo_rem.png')} 
                 style={styles.logo} 
@@ -99,24 +107,24 @@ const LoginScreen = ({ navigation, route }) => {
 
             <View style={styles.inputContainer}>
 
-                {error && <Text style={styles.error}>{error}</Text>}
+                <AnimatedError message={error} />
 
                 <TextInput
                     onChangeText={(text) => setEmail(text)}
-                    placeholderTextColor={colors.white}
+                    placeholderTextColor={colors.darkGray}
                     placeholder="Email"
                     style={styles.textInput}
                 />
-                {(errorEmail && !errorPassword) && <Text style={styles.error}>{errorEmail}</Text>}
+                {(errorEmail && !errorPassword) && <AnimatedError message={errorEmail} />}
 
                 <TextInput
                     onChangeText={(text) => setPassword(text)}
-                    placeholderTextColor={colors.white}
+                    placeholderTextColor={colors.darkGray}
                     placeholder='Password'
                     style={styles.textInput}
                     secureTextEntry
                 />
-                {errorPassword && <Text style={styles.error}>{errorPassword}</Text>}
+                {errorPassword && <AnimatedError message={errorPassword} />}
 
             </View>
             <View style={styles.footTextContainer}>
@@ -134,7 +142,7 @@ const LoginScreen = ({ navigation, route }) => {
             </View>
 
             <Pressable style={styles.btn} onPress={onSubmit}><Text style={styles.btnText}>Iniciar sesión</Text></Pressable>
-        </View>
+        </LinearGradient>
     )
 }
 
@@ -145,16 +153,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.remGreenLight
     },
     logo:{
         width:150,
         height:150
     },
     subTitle: {
-        fontFamily: "Montserrat",
         fontSize: 18,
-        color: colors.black,
+        color: colors.white,
         fontWeight: '700',
         letterSpacing: 3
     },
@@ -168,10 +174,10 @@ const styles = StyleSheet.create({
     textInput: {
         padding: 8,
         paddingLeft: 16,
-        borderRadius: 16,
-        backgroundColor: colors.darkGray,
+        borderRadius: 5,
+        backgroundColor: colors.white,
         width: textInputWidth,
-        color: colors.white,
+        color: colors.darkGray,
     },
     footTextContainer: {
         flexDirection: 'row',
@@ -191,19 +197,13 @@ const styles = StyleSheet.create({
         padding: 16,
         paddingHorizontal: 32,
         backgroundColor: colors.black,
-        borderRadius: 16,
+        borderRadius: 5,
         marginTop: 32
     },
     btnText: {
         color: colors.white,
         fontSize: 16,
-        fontWeight: '700'
-    },
-    error: {
-        padding: 16,
-        backgroundColor: colors.error,
-        borderRadius: 8,
-        color: colors.white
+        fontWeight: '500'
     },
     message: {
         padding: 16,

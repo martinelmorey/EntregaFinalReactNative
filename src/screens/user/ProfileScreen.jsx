@@ -147,10 +147,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: colors.remGreenDark,
+        backgroundColor: colors.black,
         padding: 12,
         borderRadius: 10,
-        marginTop: 20,
+        marginTop: 30,
         width: '80%',
         alignSelf: 'center'
     },
