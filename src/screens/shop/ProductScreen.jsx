@@ -40,7 +40,6 @@ const ProductScreen = ({ route }) => {
             <Text style={styles.shortDescription}>{product.shortDescription}</Text>
             <View style={styles.tagsContainer}>
                 <View style={styles.tags}>
-                    <Text style={styles.tagLabel}>Tags: </Text>
                     <View style={styles.tagsList}>
                         {
                             product.tags?.map(tag => <Text key={Math.random()} style={styles.tagText}>{tag}</Text>)
@@ -133,13 +132,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 5,
-    },
-    tagLabel: {
-        fontWeight: '600',
-        fontSize: 14,
-        color: colors.remGreenLight,
-        fontFamily:'Ubuntu-Medium',
-        marginBottom: 5
     },
     tagText: {
         fontWeight: '600',

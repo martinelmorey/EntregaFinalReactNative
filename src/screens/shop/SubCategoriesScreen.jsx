@@ -1,6 +1,6 @@
 import { StyleSheet, View, Image, Pressable, FlatList } from 'react-native'
 import FlatCard from '../../components/FlatCard'
-import TextUbuntuRegular from '../../components/TextUbuntuRegular'
+import TextUbuntuTitle from '../../components/TextUbuntuTitle'
 import { useDispatch } from 'react-redux'
 import {
   setCategorieSelected,
@@ -33,7 +33,7 @@ const SubCategoriesScreen = ({ route, navigation }) => {
     <Pressable onPress={() => onPressSubcat(item)}>
       <FlatCard>
         <View style={styles.row}>
-          <TextUbuntuRegular>{item.title}</TextUbuntuRegular>
+          <TextUbuntuTitle>{item.title}</TextUbuntuTitle>
           {!!item.image && <Image width={80} height={40} source={{ uri: item.image }} />}
         </View>
       </FlatCard>
