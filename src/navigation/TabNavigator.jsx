@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ShopStackNavigator from './ShopStackNavigator';
 import CartStackNavigator from './CartStackNavigator';
+import ListStackNavigator from './ListStackNavigation';
 import OrdersStackNavigator from './OrdersStackNavigator';
 import ProfileStackNavigator from './ProfileStackNavigator';
 //Puedo utilizar acá también el barrel (index.js)
@@ -46,6 +47,13 @@ export default function TabNavigator() {
                 component={CartStackNavigator}
                 options={{
                     tabBarIcon: ({focused}) => <Icon name="shopping-cart" size={24} color={focused?colors.darkGray:colors.mediumGray} />
+                }}
+            />
+            <Tab.Screen
+                name="List"
+                component={ListStackNavigator}
+                options={{
+                    tabBarIcon: ({focused}) => <Icon name="heart" size={24} color={focused?colors.darkGray:colors.mediumGray} />
                 }}
             />
             <Tab.Screen

@@ -12,9 +12,9 @@ const ProductsScreen = ({ navigation }) => {
   const [keyword, setKeyword] = useState('')
   const [productsFiltered, setProductsFiltered] = useState([])
 
-  const categorySlug = useSelector(s => s.shopReducer.categorySelected)
-  const subcategorySlug = useSelector(s => s.shopReducer.subcategorySelected)
-  const parentCategorySlug = useSelector(s => s.shopReducer.parentCategorySlug)
+  const categorySlug = useSelector(state => state.shopReducer.categorySelected)
+  const subcategorySlug = useSelector(state => state.shopReducer.subcategorySelected)
+  const parentCategorySlug = useSelector(state => state.shopReducer.parentCategorySlug)
 
   const { data: bySub = [], isLoading: lSub } =
     useGetProductsBySubcategoryQuery(subcategorySlug || '', {

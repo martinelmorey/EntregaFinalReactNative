@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { colors } from '../../global/colors';
 import { useDispatch } from 'react-redux';
 import { addItems } from '../../features/cart/cartSlice';
+import { addListItems } from '../../features/list/listSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 
@@ -91,6 +92,13 @@ const ProductScreen = ({ route }) => {
                 disabled={product.stock <= 0}
             >
                 <Text style={styles.textAddToCart}>Agregar al carrito</Text>
+            </Pressable>
+
+            <Pressable
+                style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToCartButton]}
+                onPress={() => dispatch(addListItems({product: product}))}
+            >
+                <Text style={styles.textAddToCart}>Agregar a la lista</Text>
             </Pressable>
         </ScrollView>
     )
