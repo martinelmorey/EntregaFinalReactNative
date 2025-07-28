@@ -86,20 +86,21 @@ const ProductScreen = ({ route }) => {
                 </View>
             )}
             
-            <Pressable
-                style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToCartButton]}
-                onPress={() => dispatch(addItems({product: product, quantity: quantity}))}
-                disabled={product.stock <= 0}
-            >
-                <Text style={styles.textAddToCart}>Agregar al carrito</Text>
+            <View style={styles.buttonsContainer}>
+                <Pressable
+                    style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToCartButton]}
+                    onPress={() => dispatch(addItems({product: product, quantity: quantity}))}
+                    disabled={product.stock <= 0}
+                >
+                    <Text style={styles.textAddToCart}>Agregar al carrito</Text>
+                </Pressable>
+                <Pressable
+                    style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToListButton]}
+                    onPress={() => dispatch(addListItems({product: product}))}
+                >
+                    <Ionicons name="heart" size={24} color="white" />
             </Pressable>
-
-            <Pressable
-                style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToCartButton]}
-                onPress={() => dispatch(addListItems({product: product}))}
-            >
-                <Text style={styles.textAddToCart}>Agregar a la lista</Text>
-            </Pressable>
+            </View>
         </ScrollView>
     )
 }
@@ -107,6 +108,12 @@ const ProductScreen = ({ route }) => {
 export default ProductScreen
 
 const styles = StyleSheet.create({
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 16
+    },
     productContainer: {
         paddingHorizontal: 16,
         marginVertical: 16
@@ -181,15 +188,30 @@ const styles = StyleSheet.create({
         fontFamily:'Ubuntu-Medium'
     },
     addToCartButton: {
+        width: 290,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 8,
         paddingHorizontal: 16,
         backgroundColor: colors.remGreenLight,
-        borderRadius: 16,
+        borderRadius: 10,
+        marginVertical: 16
+    },
+    addToListButton: {
+        width: 65,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 8,
+        paddingHorizontal: 15,
+        backgroundColor: colors.remGreenLight,
+        borderRadius: 10,
         marginVertical: 16
     },
     textAddToCart: {
         color: colors.white,
-        fontSize: 24,
+        fontSize: 22,
         fontFamily:'Ubuntu-Medium',
         textAlign: 'center',
     },
