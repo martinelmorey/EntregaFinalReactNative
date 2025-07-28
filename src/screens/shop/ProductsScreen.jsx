@@ -7,6 +7,7 @@ import { useGetProductsByCategoryQuery, useGetProductsBySubcategoryQuery } from 
 
 
 const ProductsScreen = ({ navigation }) => {
+  
   const { width } = useWindowDimensions()
   const [keyword, setKeyword] = useState('')
   const [productsFiltered, setProductsFiltered] = useState([])

@@ -9,13 +9,8 @@ import { useEffect } from "react";
 export default function MainNavigator() {
     const userEmail = useSelector(state=>state.userReducer.userEmail)
     const localId = useSelector(state=>state.userReducer.localId)
-    //console.log(userEmail)
-    //console.log("Local Id", localId )
-
     const dispatch = useDispatch()
     const {data:profilePicture,isLoading,error} = useGetProfilePictureQuery(localId)
-
-    //console.log("ProfilePicture desde MainNavigator: ", profilePicture)
 
     useEffect(()=>{
         if(profilePicture){

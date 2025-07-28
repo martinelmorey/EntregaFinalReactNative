@@ -1,4 +1,3 @@
-// screens/CategoriesScreen.tsx
 import { StyleSheet, View, Image, Pressable, FlatList } from 'react-native'
 import FlatCard from '../../components/FlatCard'
 import TextUbuntuTitle from '../../components/TextUbuntuTitle'
@@ -12,7 +11,7 @@ const CategoriesScreen = ({ navigation }) => {
 
   const onPressCategory = (item) => {
     dispatch(setCategorieSelected(item.slug))
-    navigation.navigate("Sub Categorías", { category: item }) // ← pantalla intermedia
+    navigation.navigate("Sub Categorías", { category: item }) 
   }
 
   const renderCategoryItem = ({ item }) => (
