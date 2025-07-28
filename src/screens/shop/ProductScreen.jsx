@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginVertical: 16
+        marginVertical: 10
     },
     productContainer: {
         paddingHorizontal: 16,
@@ -215,12 +215,12 @@ const styles = StyleSheet.create({
     },
     quantityContainer: {
         alignItems: 'center',
-        marginVertical: 10
+        marginVertical: 0
     },
     quantityLabel: {
         fontSize: 16,
         fontFamily: 'Ubuntu-Medium',
-        marginBottom: 8
+        marginBottom: 4
     },
     quantitySelector: {
         flexDirection: 'row',

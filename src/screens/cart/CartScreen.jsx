@@ -19,12 +19,8 @@ const CartScreen = () => {
     if (cartItems.length === 0) return
     
     try {
-      // Guardar la orden en Firebase usando RTK Query
       await addOrder({localId, cartItems})
-      
-      // Limpiar el carrito local después de confirmar la orden
       dispatch(clearCart())
-      
       alert('¡Pedido confirmado con éxito!')
     } catch (error) {
       console.error('Error al confirmar el pedido:', error)
@@ -32,12 +28,27 @@ const CartScreen = () => {
     }
   }
 
+  const handleClearCart = () => {
+    try {
+      dispatch(clearCart())
+      alert('Carrito limpiado con éxito!')
+    } catch (error) {
+      console.error('Error al limpiar el carrito:', error)
+      alert('Hubo un error al limpiar el carrito. Intenta nuevamente.')
+    }
+  }
+
   const FooterComponent = () => (
     <View style={styles.footerContainer}>
       <Text style={styles.footerTotal}>Total: $ {total} </Text>
-      <Pressable onPress={handleConfirmOrder} style={styles.confirmButton}>
-        <Text style={styles.confirmButtonText}>Confirmar</Text>
+      <View style={styles.footerButtonsContainer}>
+      <Pressable onPress={handleClearCart} style={styles.clearButton}>
+        <Text style={styles.clearButtonText}>Limpiar carrito <Icon name="delete" size={24} style={styles.trashIcon} /></Text>
       </Pressable>
+      <Pressable onPress={handleConfirmOrder} style={styles.confirmButton}>
+        <Text style={styles.confirmButtonText}>Confirmar <Icon name="check" size={24} style={styles.checkIcon} /></Text>
+      </Pressable>
+      </View>
     </View>
   )
 
@@ -85,6 +96,60 @@ const CartScreen = () => {
 export default CartScreen
 
 const styles = StyleSheet.create({
+  checkIcon: {
+    marginRight: 16,
+    color: colors.white,
+  },
+  footerButtonsContainer: {
+    flexDirection: 'row',
+    gap: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  clearButton: {
+    padding: 8,
+    paddingHorizontal: 16,
+    backgroundColor: colors.black,
+    borderRadius: 5,
+    width: 170,
+    textAlign: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
+  },
+  clearButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
+  }, 
+  confirmButton: {
+    padding: 8,
+    paddingHorizontal: 16,
+    backgroundColor: colors.remGreenLight,
+    borderRadius: 5,
+    width: 170,
+    textAlign: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
+  },
+  confirmButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: '700',
+    textAlign: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
+  },
   cartContainer: {
     flexDirection: 'row',
     padding: 20,
@@ -114,9 +179,8 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   trashIcon: {
-    alignSelf: 'flex-end',
     marginRight: 16,
-    color: colors.black,
+    color: colors.white,
   },
   footerContainer: {
     padding: 32,
@@ -128,18 +192,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700'
   },
-  confirmButton: {
-    padding: 8,
-    paddingHorizontal: 16,
-    backgroundColor: colors.remGreenLight,
-    borderRadius: 5,
-    marginBottom: 24,
-  },
-  confirmButtonText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: '700'
-  }, 
   cartScreenTitle: {
     fontSize: 16,
     fontWeight: '700',
