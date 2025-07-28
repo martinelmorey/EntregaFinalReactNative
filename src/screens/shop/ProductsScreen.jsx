@@ -54,15 +54,19 @@ const ProductsScreen = ({ navigation }) => {
 
   const renderProductItem = ({ item }) => (
     <Pressable onPress={() => navigation.navigate('Producto', { product: item })}>
-      <FlatCard>
+      <FlatCard style={styles.productCard}>
         <Image
             source={{ uri: item.mainImage }}
             alt={item.title}
             width='100%'
             height={width * 1}
             resizeMode='contain'
+            style={styles.productImage}
         />
-        <Text>{item.title}</Text>
+        <Text style={styles.productBrand}>{item.brand}</Text>
+        <Text style={styles.productTitle}>{item.title}</Text>
+        <Text style={styles.productPrice}>${item.price}</Text>
+        <Text style={styles.productSubcategory}>{item.subcategory}</Text>
       </FlatCard>
     </Pressable>
   )
@@ -72,7 +76,7 @@ const ProductsScreen = ({ navigation }) => {
 
   return (
     <>
-      <Search keyword={keyword} setKeyword={setKeyword} />
+      <Search keyword={keyword} setKeyword={setKeyword}/>
       <FlatList
         data={productsFiltered}
         renderItem={renderProductItem}
@@ -85,10 +89,46 @@ const ProductsScreen = ({ navigation }) => {
 export default ProductsScreen
 
 const styles = StyleSheet.create({
+  productSubcategory: {
+    fontSize: 14,
+    fontFamily: 'Ubuntu-Regular',
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  productPrice: {
+    fontSize: 22,
+    fontFamily: 'Ubuntu-Bold',
+    color: '#2E7D32',
+    marginBottom: 5,
+    marginTop: 5,
+    textAlign: 'center',
+  },
+  productBrand: {
+    fontSize: 14,
+    fontFamily: 'Ubuntu-Regular',
+    textAlign: 'center',
+  },
   message: {
     fontSize: 16,
     fontFamily: 'Ubuntu-Regular',
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 5,
   },
+  productTitle: {
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Medium',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  productImage: {
+    width: '100%',
+    resizeMode: 'contain',
+    borderRadius: 4,
+    marginVertical: 0,
+  },
+  productCard: {
+    padding: 20,
+    backgroundColor: '#fff',
+    marginVertical: 20,
+  }
 })

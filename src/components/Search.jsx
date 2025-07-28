@@ -4,6 +4,8 @@ import { colors } from '../global/colors'
 
 const Search = ({keyword,setKeyword}) => {
   return (
+    <>
+    <Text style={styles.title}>Busca tus productos aqui</Text>
     <View style={styles.searchContainer}>
       <TextInput
         onChangeText={(text)=>setKeyword(text)}
@@ -12,12 +14,18 @@ const Search = ({keyword,setKeyword}) => {
         />
         <Ionicons name="search" size={32} color={colors.darkGray} /> 
     </View>
+    </>
   )
 }
 
 export default Search
 
 const styles = StyleSheet.create({
+    title:{
+        fontSize:16,
+        fontFamily:'Ubuntu-Regular',
+        margin:8
+    },
     searchContainer:{
         flexDirection:"row",
         alignItems:'center',

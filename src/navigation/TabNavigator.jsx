@@ -39,35 +39,35 @@ export default function TabNavigator() {
                 name="Shop"
                 component={ShopStackNavigator}
                 options={{
-                    tabBarIcon: ({focused}) => <Icon name="shopping-bag" size={24} color={focused?colors.darkGray:colors.mediumGray} />
+                    tabBarIcon: ({focused}) => <Icon name="shopping-bag" size={22} color={focused?colors.white:colors.mediumGray} />
                 }}
             />
             <Tab.Screen
                 name="Cart"
                 component={CartStackNavigator}
                 options={{
-                    tabBarIcon: ({focused}) => <Icon name="shopping-cart" size={24} color={focused?colors.darkGray:colors.mediumGray} />
+                    tabBarIcon: ({focused}) => <Icon name="shopping-cart" size={22} color={focused?colors.white:colors.mediumGray} />
                 }}
             />
             <Tab.Screen
                 name="List"
                 component={ListStackNavigator}
                 options={{
-                    tabBarIcon: ({focused}) => <Icon name="heart" size={24} color={focused?colors.darkGray:colors.mediumGray} />
+                    tabBarIcon: ({focused}) => <Icon name="heart" size={22} color={focused?colors.white:colors.mediumGray} />
                 }}
-            />
+                />
             <Tab.Screen
                 name="Orders"
                 component={OrdersStackNavigator}
                 options={{
-                    tabBarIcon: ({focused}) => <Icon name="tablet" size={24} color={focused?colors.darkGray:colors.mediumGray} />
+                    tabBarIcon: ({focused}) => <Icon name="tablet" size={22} color={focused?colors.white:colors.mediumGray} />
                 }}
-            />
+                />
             <Tab.Screen
                 name="Profile"
                 component={ProfileStackNavigator}
                 options={{
-                    tabBarIcon: ({focused}) => <Icon name="user" size={24} color={focused?colors.darkGray:colors.mediumGray} />
+                    tabBarIcon: ({focused}) => <Icon name="user" size={22} color={focused?colors.white:colors.mediumGray} />
                 }}
             />
         </Tab.Navigator>
@@ -76,6 +76,7 @@ export default function TabNavigator() {
 
 const styles = StyleSheet.create({
     tabBar:{
-        backgroundColor:colors.white
+        backgroundColor:colors.black,
+        height:80
     }
 })
