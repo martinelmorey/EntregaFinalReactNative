@@ -38,6 +38,11 @@ const ProductsScreen = ({ navigation }) => {
     return []
   }, [subcategorySlug, bySub, byCatLeaf, byCatParent])
 
+  const isLoading = lSub || lCatLeaf || lCatParent
+
+  if (isLoading) return <Loader text="Cargando productos..." />
+  if (error) return <Text style={styles.message}>Error al cargar productos</Text>
+
   useEffect(() => {
     if (keyword) {
       const k = keyword.toLowerCase()

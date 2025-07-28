@@ -8,12 +8,12 @@ const Stack = createNativeStackNavigator();
 export default function OrdersStackNavigator() {
     return (
         <Stack.Navigator
-            initialRouteName='Carrito'
+            initialRouteName='Pedidos'
             screenOptions={{
                 header: ({ route }) => <Header title="Rem Ecommerce" subtitle={route.name} />
             }}
         >
-            <Stack.Screen name="Carrito" component={OrdersScreen} />
+            <Stack.Screen name="Pedidos" component={OrdersScreen} />
         </Stack.Navigator>
     );
 }

@@ -4,10 +4,14 @@ import TextUbuntuTitle from '../../components/TextUbuntuTitle'
 import { useDispatch } from 'react-redux'
 import { setCategorieSelected } from '../../features/shop/shopSlice'
 import { useGetCategoriesQuery } from '../../services/shop/shopApi'
+import Loader from '../../components/Loader'
 
 const CategoriesScreen = ({ navigation }) => {
   const { data: categories = [], isLoading, error } = useGetCategoriesQuery()
   const dispatch = useDispatch()
+
+  if (isLoading) return <Loader text="Cargando categorías..." />
+  if (error) return <Text style={styles.message}>Error al cargar categorías</Text>
 
   const onPressCategory = (item) => {
     dispatch(setCategorieSelected(item.slug))

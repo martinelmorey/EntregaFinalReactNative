@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { colors } from '../global/colors'
 
 const FlatCard = ({ children,style }) => {
     return (
@@ -12,13 +11,13 @@ const FlatCard = ({ children,style }) => {
 export default FlatCard
 
 const styles = StyleSheet.create({
-    container:{
-        justifyContent:"center",
-        backgroundColor:colors.lightGray,
-        alignItems:"center",
-        paddingVertical:24,
-        margin:16,
-        shadowColor:colors.black,
-        elevation: 4,
+    container: {
+        backgroundColor: '#fff',
+        marginHorizontal: 10,
+        marginVertical: 8,
+        borderRadius: 8,
+        padding: 12,
+        borderWidth: 1,
+        borderColor: '#eee',
     }
 })

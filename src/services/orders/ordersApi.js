@@ -19,22 +19,22 @@ export const ordersApi = createApi({
             }
         }),
         addOrder: builder.mutation({
-            query: ({localId, product}) => ({
-                url: `orders/${localId}/${product.id}.json`,
-                method: 'PUT',
+            query: ({localId, cartItems}) => ({
+                url: `orders/${localId}.json`,
+                method: 'POST',
                 body: {
-                    title: product.title,
-                    price: product.price,
-                    mainImage: product.mainImage,
-                    brand: product.brand,
-                    addedAt: Date.now()
+                    items: cartItems,
+                    total: cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0),
+                    date: new Date().toLocaleString(),
+                    status: 'confirmed',
+                    orderedAt: Date.now()
                 }
             }),
             invalidatesTags: ['Orders']  
         }),
         removeFromOrders: builder.mutation({
-            query: ({localId, productId}) => ({
-                url: `orders/${localId}/${productId}.json`,
+            query: ({localId, cartItems}) => ({
+                url: `orders/${localId}/${cartItems.id}.json`,
                 method: 'DELETE'
             }),
             invalidatesTags: ['Orders']

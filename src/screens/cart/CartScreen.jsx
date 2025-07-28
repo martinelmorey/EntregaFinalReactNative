@@ -3,19 +3,39 @@ import { colors } from '../../global/colors'
 import FlatCard from '../../components/FlatCard'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useSelector, useDispatch } from 'react-redux'
-import { removeItems } from '../../features/cart/cartSlice'
-import { addOrder } from '../../features/orders/ordersSlice'
+import { removeItems, clearCart } from '../../features/cart/cartSlice'
+import { useAddOrderMutation } from '../../services/orders/ordersApi'
 
 const CartScreen = () => {
 
+  const localId = useSelector(state => state.userReducer.localId)
   const cartItems = useSelector(state => state.cartReducer.cartItems)
   const total = useSelector(state => state.cartReducer.total)
   const dispatch = useDispatch()
 
+  const [addOrder] = useAddOrderMutation()
+  
+  const handleConfirmOrder = async () => {
+    if (cartItems.length === 0) return
+    
+    try {
+      // Guardar la orden en Firebase usando RTK Query
+      await addOrder({localId, cartItems})
+      
+      // Limpiar el carrito local después de confirmar la orden
+      dispatch(clearCart())
+      
+      alert('¡Pedido confirmado con éxito!')
+    } catch (error) {
+      console.error('Error al confirmar el pedido:', error)
+      alert('Hubo un error al confirmar tu pedido. Intenta nuevamente.')
+    }
+  }
+
   const FooterComponent = () => (
     <View style={styles.footerContainer}>
       <Text style={styles.footerTotal}>Total: $ {total} </Text>
-      <Pressable onPress={() => dispatch(addOrder({localId, product}))} style={styles.confirmButton}>
+      <Pressable onPress={handleConfirmOrder} style={styles.confirmButton}>
         <Text style={styles.confirmButtonText}>Confirmar</Text>
       </Pressable>
     </View>
@@ -32,12 +52,11 @@ const CartScreen = () => {
       </View>
       <View style={styles.cartDescription}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.shortDescription}</Text>
         <Text style={styles.price}>Precio unitario: $ {item.price}</Text>
-        <Text stlyle={styles.quantity}>Cantidad: {item.quantity}</Text>
+        <Text style={styles.quantity}>Cantidad: {item.quantity}</Text>
         <Text style={styles.total}>Total: $ {item.quantity * item.price}</Text>
         <Pressable onPress={() => dispatch(removeItems(item.id))}>
-          <Icon name="delete" size={24} color="#FC7A5E" style={styles.trashIcon} />
+          <Icon name="delete" size={24} style={styles.trashIcon} />
         </Pressable>
       </View>
     </FlatCard>
@@ -70,13 +89,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 20,
     justifyContent: "flex-start",
-    margin: 16,
-    alignItems: "center",
-    gap: 10
+    alignItems: "flex-start",
+    gap: 5
   },
   cartImage: {
-    width: 80,
-    height: 80
+    width: 100,
+    height:120,
+    marginVertical: 20
   },
   cartDescription: {
     width: '80%',
@@ -84,7 +103,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: '700'
+    fontWeight: '700',
   },
   description: {
     marginBottom: 16,
@@ -97,6 +116,7 @@ const styles = StyleSheet.create({
   trashIcon: {
     alignSelf: 'flex-end',
     marginRight: 16,
+    color: colors.black,
   },
   footerContainer: {
     padding: 32,
@@ -112,18 +132,19 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingHorizontal: 16,
     backgroundColor: colors.remGreenLight,
-    borderRadius: 16,
+    borderRadius: 5,
     marginBottom: 24,
   },
   confirmButtonText: {
     color: colors.white,
     fontSize: 16,
     fontWeight: '700'
-  }, cartScreenTitle: {
+  }, 
+  cartScreenTitle: {
     fontSize: 16,
     fontWeight: '700',
     textAlign: "center",
-    paddingVertical: 8
+    paddingVertical: 10
   }
 
 })

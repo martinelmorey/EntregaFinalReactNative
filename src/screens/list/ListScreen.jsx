@@ -4,6 +4,7 @@ import FlatCard from '../../components/FlatCard'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useGetListaQuery, useRemoveFromListaMutation, useClearListaMutation } from '../../services/lista/listaApi'
 import { useSelector } from 'react-redux'
+import Loader from '../../components/Loader'
 
 const ListScreen = () => {
 
@@ -11,8 +12,9 @@ const ListScreen = () => {
    const { data: listItems = [], isLoading, error } = useGetListaQuery(localId)
    const [removeFromLista] = useRemoveFromListaMutation()
    const [clearLista] = useClearListaMutation()
-   if (isLoading) return <Text>Cargando tu lista...</Text>
-   if (error) return <Text>Error al cargar tu lista</Text>
+
+   if (isLoading) return <Loader text="Cargando tu lista..." />
+   if (error) return <Text style={styles.message}>Error al cargar tu lista</Text>
 
   const renderListItems = ({ item }) => (
     <FlatCard style={styles.listContainer}>
@@ -80,13 +82,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 20,
     justifyContent: "flex-start",
-    margin: 16,
-    alignItems: "center",
-    gap: 10
+    alignItems: "flex-start",
+    gap: 5
   },
   listImage: {
-    width: 80,
-    height: 80
+    width: 100,
+    height:120,
+    marginVertical: 20
   },
   listDescription: {
     width: '80%',

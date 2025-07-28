@@ -1,133 +1,168 @@
-import { FlatList, StyleSheet, Text, View, Image, Pressable } from 'react-native'
-import { colors } from '../../global/colors'
-import FlatCard from '../../components/FlatCard'
-import Icon from 'react-native-vector-icons/MaterialIcons'
-import { useGetOrdersQuery } from '../../services/orders/ordersApi'
+import React from 'react'
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native'
 import { useSelector } from 'react-redux'
+import { useGetOrdersQuery } from '../../services/orders/ordersApi'
+import Loader from '../../components/Loader'
 
 const OrdersScreen = () => {
+  const localId = useSelector(state => state.userReducer.localId)
+  const { data: ordersItems = [], isLoading, error } = useGetOrdersQuery(localId)
+  
+  if (isLoading) return <Loader text="Cargando tus pedidos..." />
+  if (error) return <Text style={styles.message}>Error al cargar tus pedidos</Text>
 
-   const localId = useSelector(state => state.userReducer.localId)
-   const { data: ordersItems = [], isLoading, error } = useGetOrdersQuery(localId)
-   if (isLoading) return <Text>Cargando tu lista...</Text>
-   if (error) return <Text>Error al cargar tu lista</Text>
-
-  const renderOrdersItems = ({ item }) => (
-    <FlatCard style={styles.ordersContainer}>
-      <View>
-        <Image
-          source={{ uri: item.mainImage }}
-          style={styles.ordersImage}
-          resizeMode='cover'
-        />
+  const renderOrderItem = ({ item }) => (
+    <View style={styles.orderContainer}>
+      <View style={styles.orderHeader}>
+        <Text style={styles.orderDate}>Fecha: {item.date || 'No disponible'}</Text>
+        <Text style={styles.orderStatus}>Estado: <Text style={styles.statusText}>{item.status || 'Pendiente'}</Text></Text>
+        <Text style={styles.orderTotal}>Total: <Text style={styles.totalText}>${item.total || 0}</Text></Text>
       </View>
-      <View style={styles.ordersDescription}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.shortDescription}</Text>
-        <Text style={styles.price}>Precio: $ {item.price}</Text>
-      </View>
-    </FlatCard>
+      
+      <Text style={styles.productsTitle}>Productos:</Text>
+      
+      {item.items && Array.isArray(item.items) && item.items.length > 0 ? (
+        item.items.map(product => (
+          <View key={product.id} style={styles.productItem}>
+            {product.mainImage ? (
+              <Image
+                source={{ uri: product.mainImage }}
+                style={styles.productImage}
+                resizeMode='cover'
+              />
+            ) : (
+              <View style={[styles.productImage, styles.noImage]} />
+            )}
+            <View style={styles.productDetails}>
+              <Text style={styles.productTitle} numberOfLines={1}>{product.title || 'Producto'}</Text>
+              <Text style={styles.productInfo}>Precio: ${product.price || 0}</Text>
+              <Text style={styles.productInfo}>Cantidad: {product.quantity || 1}</Text>
+              <Text style={styles.productSubtotal}>Subtotal: ${(product.price || 0) * (product.quantity || 1)}</Text>
+            </View>
+          </View>
+        ))
+      ) : (
+        <Text style={styles.noProducts}>No hay productos en esta orden</Text>
+      )}
+    </View>
   )
 
   return (
-    <>
-      {
-        ordersItems.length>0
-          ?
-          <>
-            <FlatList
-                data={ordersItems}
-                keyExtractor={item => item.id}
-                renderItem={renderOrdersItems}
-                ListHeaderComponent={<Text style={styles.ordersScreenTitle}>Aqui está tu lista de favoritos</Text>}
-            />
-            <Pressable onPress={() => clearLista(localId)} style={styles.clearListButton}>
-                <Text style={styles.clearListButtonText}>Limpiar lista</Text>
-                <Icon name="delete" size={24} style={styles.trashIconButton} />
-            </Pressable>
-          </>
-          :
-          <Text>Aún no hay productos en la lista</Text>
-      }
-    </> 
+    <View style={styles.container}>
+      {ordersItems.length > 0 ? (
+        <FlatList
+          data={ordersItems}
+          keyExtractor={item => item.id || String(Math.random())}
+          renderItem={renderOrderItem}
+          ListHeaderComponent={<Text style={styles.screenTitle}>Mis Pedidos</Text>}
+        />
+      ) : (
+        <Text style={styles.message}>No tienes pedidos</Text>
+      )}
+    </View>
   )
 }
 
 export default OrdersScreen
 
 const styles = StyleSheet.create({
-  clearListButton: {
+  container: {
+    flex: 1,
+    backgroundColor: '#f9f9f9',
+    paddingTop: 10,
+  },
+  message: {
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Regular',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  screenTitle: {
+    fontSize: 18,
+    fontFamily: 'Ubuntu-Bold',
+    textAlign: 'center',
+    marginVertical: 15,
+  },
+  orderContainer: {
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
+    marginVertical: 8,
+    borderRadius: 8,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  orderHeader: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingBottom: 8,
+    marginBottom: 8,
+  },
+  orderDate: {
+    fontSize: 14,
+    fontFamily: 'Ubuntu-Regular',
+  },
+  orderStatus: {
+    fontSize: 14,
+    fontFamily: 'Ubuntu-Regular',
+    marginTop: 4,
+  },
+  statusText: {
+    color: '#4CAF50',
+    fontFamily: 'Ubuntu-Medium',
+  },
+  orderTotal: {
+    fontSize: 15,
+    fontFamily: 'Ubuntu-Regular',
+    marginTop: 4,
+  },
+  totalText: {
+    fontFamily: 'Ubuntu-Bold',
+  },
+  productsTitle: {
+    fontSize: 15,
+    fontFamily: 'Ubuntu-Medium',
+    marginBottom: 8,
+  },
+  productItem: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 14,
-    backgroundColor: colors.black,
-    borderRadius: 5,
-    margin: 16,
-  },
-  clearListButtonText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: '700',
-    marginRight: 8
-  },
-  ordersContainer: {
-    flexDirection: 'row',
-    padding: 20,
-    justifyContent: "flex-start",
-    margin: 16,
-    alignItems: "center",
-    gap: 10
-  },
-  ordersImage: {
-    width: 80,
-    height: 80
-  },
-  ordersDescription: {
-    width: '80%',
-    padding: 20,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '700'
-  },
-  description: {
-    marginBottom: 16,
-  },
-  ordersScreenTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    textAlign: "center",
-    paddingVertical: 8
-  },
-  trashIcon: {
-    alignSelf: 'flex-end',
-    marginRight: 16,
-    color: colors.black,
-  },
-  trashIconButton: {
-    color: colors.white,
-  },
-  footerContainer: {
-    padding: 32,
-    gap: 8,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  footerTotal: {
-    fontSize: 16,
-    fontWeight: '700'
-  },
-  confirmButton: {
     padding: 8,
-    paddingHorizontal: 16,
-    backgroundColor: colors.remGreenLight,
-    borderRadius: 16,
-    marginBottom: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    marginBottom: 8,
   },
-  confirmButtonText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: '700'
+  productImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 4,
   },
+  noImage: {
+    backgroundColor: '#f0f0f0',
+  },
+  productDetails: {
+    marginLeft: 10,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  productTitle: {
+    fontSize: 14,
+    fontFamily: 'Ubuntu-Medium',
+    marginBottom: 2,
+  },
+  productInfo: {
+    fontSize: 13,
+    fontFamily: 'Ubuntu-Regular',
+  },
+  productSubtotal: {
+    fontSize: 13,
+    fontFamily: 'Ubuntu-Medium',
+    color: '#4CAF50',
+  },
+  noProducts: {
+    textAlign: 'center',
+    fontFamily: 'Ubuntu-Regular',
+    fontSize: 14,
+    color: '#888',
+    marginVertical: 10,
+  }
 })
