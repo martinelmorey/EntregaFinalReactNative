@@ -4,6 +4,7 @@ import FlatCard from '../../components/FlatCard'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeItems } from '../../features/cart/cartSlice'
+import { addOrder } from '../../features/orders/ordersSlice'
 
 const CartScreen = () => {
 
@@ -14,7 +15,7 @@ const CartScreen = () => {
   const FooterComponent = () => (
     <View style={styles.footerContainer}>
       <Text style={styles.footerTotal}>Total: $ {total} </Text>
-      <Pressable style={styles.confirmButton}>
+      <Pressable onPress={() => dispatch(addOrder({localId, product}))} style={styles.confirmButton}>
         <Text style={styles.confirmButtonText}>Confirmar</Text>
       </Pressable>
     </View>
