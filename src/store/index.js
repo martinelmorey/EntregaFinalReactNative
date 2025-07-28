@@ -6,6 +6,7 @@ import listReducer from "../features/list/listSlice"
 import { shopApi } from "../services/shop/shopApi";
 import { authApi } from "../services/auth/authApi";
 import { userApi } from "../services/user/userApi";
+import { listaApi } from "../services/lista/listaApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 const store = configureStore({
@@ -17,11 +18,13 @@ const store = configureStore({
         [shopApi.reducerPath]: shopApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
+        [listaApi.reducerPath]: listaApi.reducer,
     },
     middleware: (getDefaultMiddleware)=>(getDefaultMiddleware()
                         .concat(shopApi.middleware)
                         .concat(authApi.middleware)
                         .concat(userApi.middleware)
+                        .concat(listaApi.middleware)
                     )
 
 })

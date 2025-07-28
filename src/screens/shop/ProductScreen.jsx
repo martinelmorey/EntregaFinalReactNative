@@ -1,31 +1,29 @@
 import { StyleSheet, Text, View, Pressable, Image, ScrollView, useWindowDimensions } from 'react-native'
 import { useState } from 'react';
 import { colors } from '../../global/colors';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItems } from '../../features/cart/cartSlice';
-import { addListItems } from '../../features/list/listSlice';
+import { useAddToListaMutation } from '../../services/lista/listaApi';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-
 const ProductScreen = ({ route }) => {
+    const localId = useSelector(state => state.userReducer.localId)
     const { product } = route.params
     const { width } = useWindowDimensions()
     const [quantity, setQuantity] = useState(1)
- 
+    const [addToLista] = useAddToListaMutation() 
     const dispatch = useDispatch()
-
+    
     const incrementQuantity = () => {
         if (quantity < product.stock) {
             setQuantity(quantity + 1)
         }
     }
-    
     const decrementQuantity = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1)
         }
     }
-
 
     return (
         <ScrollView style={styles.productContainer}>
@@ -96,7 +94,7 @@ const ProductScreen = ({ route }) => {
                 </Pressable>
                 <Pressable
                     style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToListButton]}
-                    onPress={() => dispatch(addListItems({product: product}))}
+                    onPress={() => addToLista({localId: localId, product: product})}
                 >
                     <Ionicons name="heart" size={24} color="white" />
             </Pressable>

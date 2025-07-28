@@ -2,13 +2,17 @@ import { FlatList, StyleSheet, Text, View, Image, Pressable } from 'react-native
 import { colors } from '../../global/colors'
 import FlatCard from '../../components/FlatCard'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import { useSelector, useDispatch } from 'react-redux'
-import { removeListItems } from '../../features/list/listSlice'
+import { useGetListaQuery, useRemoveFromListaMutation, useClearListaMutation } from '../../services/lista/listaApi'
+import { useSelector } from 'react-redux'
 
 const ListScreen = () => {
 
-  const listItems = useSelector(state => state.listReducer.listItems)
-  const dispatch = useDispatch()
+   const localId = useSelector(state => state.userReducer.localId)
+   const { data: listItems = [], isLoading, error } = useGetListaQuery(localId)
+   const [removeFromLista] = useRemoveFromListaMutation()
+   const [clearLista] = useClearListaMutation()
+   if (isLoading) return <Text>Cargando tu lista...</Text>
+   if (error) return <Text>Error al cargar tu lista</Text>
 
   const renderListItems = ({ item }) => (
     <FlatCard style={styles.listContainer}>
@@ -23,7 +27,7 @@ const ListScreen = () => {
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.description}>{item.shortDescription}</Text>
         <Text style={styles.price}>Precio: $ {item.price}</Text>
-        <Pressable onPress={() => dispatch(removeListItems(item.id))}>
+        <Pressable onPress={() => removeFromLista({localId, productId: item.id})}>
           <Icon name="delete" size={24} color="#FC7A5E" style={styles.trashIcon} />
         </Pressable>
       </View>
@@ -35,13 +39,18 @@ const ListScreen = () => {
       {
         listItems.length>0
           ?
-          <FlatList
-            data={listItems}
-            keyExtractor={item => item.id}
-            renderItem={renderListItems}
-            ListHeaderComponent={<Text style={styles.listScreenTitle}>Tu lista:</Text>}
-          />
-
+          <>
+            <FlatList
+                data={listItems}
+                keyExtractor={item => item.id}
+                renderItem={renderListItems}
+                ListHeaderComponent={<Text style={styles.listScreenTitle}>Aqui está tu lista de favoritos</Text>}
+            />
+            <Pressable onPress={() => clearLista(localId)} style={styles.clearListButton}>
+                <Text style={styles.clearListButtonText}>Limpiar lista</Text>
+                <Icon name="delete" size={24} style={styles.trashIconButton} />
+            </Pressable>
+          </>
           :
           <Text>Aún no hay productos en la lista</Text>
       }
@@ -52,6 +61,21 @@ const ListScreen = () => {
 export default ListScreen
 
 const styles = StyleSheet.create({
+  clearListButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 14,
+    backgroundColor: colors.black,
+    borderRadius: 5,
+    margin: 16,
+  },
+  clearListButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: '700',
+    marginRight: 8
+  },
   listContainer: {
     flexDirection: 'row',
     padding: 20,
@@ -83,6 +107,10 @@ const styles = StyleSheet.create({
   trashIcon: {
     alignSelf: 'flex-end',
     marginRight: 16,
+    color: colors.black,
+  },
+  trashIconButton: {
+    color: colors.white,
   },
   footerContainer: {
     padding: 32,
@@ -105,7 +133,8 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontWeight: '700'
-  }, listScreenTitle: {
+  },
+  listScreenTitle: {
     fontSize: 16,
     fontWeight: '700',
     textAlign: "center",
