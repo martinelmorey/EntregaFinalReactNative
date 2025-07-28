@@ -63,6 +63,12 @@ const ListScreen = () => {
 export default ListScreen
 
 const styles = StyleSheet.create({
+  message: {
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Regular',
+    textAlign: 'center',
+    marginTop: 20,
+  },
   clearListButton: {
     flexDirection: 'row',
     justifyContent: 'center',

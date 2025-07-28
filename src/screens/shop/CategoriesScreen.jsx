@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, Pressable, FlatList } from 'react-native'
+import { StyleSheet, View, Image, Pressable, FlatList, Text } from 'react-native'
 import FlatCard from '../../components/FlatCard'
 import TextUbuntuTitle from '../../components/TextUbuntuTitle'
 import { useDispatch } from 'react-redux'
@@ -41,6 +41,12 @@ const CategoriesScreen = ({ navigation }) => {
 export default CategoriesScreen
 
 const styles = StyleSheet.create({
+  message: {
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Regular',
+    textAlign: 'center',
+    marginTop: 20,
+  },
   categoryContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

@@ -16,3 +16,18 @@ const Loader = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    marginTop: 16,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+});
+
+export default Loader
