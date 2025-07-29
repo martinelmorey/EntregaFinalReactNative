@@ -5,16 +5,35 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useGetListaQuery, useRemoveFromListaMutation, useClearListaMutation } from '../../services/lista/listaApi'
 import { useSelector } from 'react-redux'
 import Loader from '../../components/Loader'
+import Toast from 'react-native-toast-message'
 
-const ListScreen = () => {
+const ListScreen = ({navigation}) => {
 
-   const localId = useSelector(state => state.userReducer.localId)
-   const { data: listItems = [], isLoading, error } = useGetListaQuery(localId)
-   const [removeFromLista] = useRemoveFromListaMutation()
-   const [clearLista] = useClearListaMutation()
+  const localId = useSelector(state => state.userReducer.localId)
+  const { data: listItems = [], isLoading, error } = useGetListaQuery(localId)
+  const [removeFromLista] = useRemoveFromListaMutation()
+  const [clearLista] = useClearListaMutation()
 
-   if (isLoading) return <Loader text="Cargando tu lista..." />
-   if (error) return <Text style={styles.message}>Error al cargar tu lista</Text>
+  if (isLoading) return <Loader text="Cargando tu lista..." />
+  if (error) return <Text style={styles.message}>Error al cargar tu lista</Text>
+   
+
+  const hanleClearList = async () => {
+    try {
+      await clearLista(localId)
+      Toast.show({
+        type: 'success',
+        text1: '¡Lista eliminada!',
+        position: 'top',
+      })
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Hubo un error al eliminar la lista. Intenta nuevamente.',
+        position: 'top',
+      })
+    }
+  }
 
   const renderListItems = ({ item }) => (
     <FlatCard style={styles.listContainer}>
@@ -48,13 +67,24 @@ const ListScreen = () => {
                 renderItem={renderListItems}
                 ListHeaderComponent={<Text style={styles.listScreenTitle}>Aqui está tu lista de favoritos</Text>}
             />
-            <Pressable onPress={() => clearLista(localId)} style={styles.clearListButton}>
+            <Pressable onPress={hanleClearList} style={styles.clearListButton}>
                 <Text style={styles.clearListButtonText}>Limpiar lista</Text>
                 <Icon name="delete" size={24} style={styles.trashIconButton} />
             </Pressable>
           </>
           :
-          <Text>Aún no hay productos en la lista</Text>
+          <View style={styles.emptyContainer}>
+            <Icon name="list" size={80} color={colors.mediumGray} />
+            <Text style={styles.emptyTitle}>Tu lista está vacía</Text>
+            <Text style={styles.emptySubtitle}>¿Querés agregar productos a tu lista?</Text>
+            <Pressable
+              style={styles.goToShopButton}
+              onPress={() => navigation.navigate('Shop', { screen: 'Categorías' })}
+            >
+              <Text style={styles.goToShopButtonText}>Ir a la tienda</Text>
+              <Icon name="store" size={20} color={colors.white} />
+            </Pressable>
+          </View>
       }
     </> 
   )
@@ -63,6 +93,34 @@ const ListScreen = () => {
 export default ListScreen
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  goToShopButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.remGreenLight,
+    padding: 12,
+    borderRadius: 5,
+  },
+  goToShopButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Bold',
+    marginRight: 8,
+  },
   message: {
     fontSize: 16,
     fontFamily: 'Ubuntu-Regular',

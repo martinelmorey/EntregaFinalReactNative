@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import store from './src/store';
 import MainNavigator from './src/navigation/MainNavigator';
 import { SQLiteProvider } from 'expo-sqlite';
+import Toast from 'react-native-toast-message';
 
 
 
@@ -51,6 +52,7 @@ export default function App() {
       <Provider store={store}>
         <StatusBar style="light" />
         <MainNavigator />
+        <Toast />
       </Provider>
     </SQLiteProvider>
   );

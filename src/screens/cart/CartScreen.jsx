@@ -6,8 +6,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { removeItems, clearCartLocal } from '../../features/cart/cartSlice'
 import { useAddOrderMutation } from '../../services/orders/ordersApi'
 import { useClearCartMutation, useRemoveFromCartMutation } from '../../services/cart/cartApi'
+import Toast from 'react-native-toast-message'
 
-const CartScreen = () => {
+const CartScreen = ({navigation}) => {
 
   const localId = useSelector(state => state.userReducer.localId)
   const cartItems = useSelector(state => state.cartReducer.cartItems)
@@ -25,10 +26,18 @@ const CartScreen = () => {
       await addOrder({localId, cartItems})
       await clearCart(localId)
       dispatch(clearCartLocal())
-      alert('¡Pedido confirmado con éxito!')
+      Toast.show({
+        type: 'success',
+        text1: '¡Pedido confirmado con éxito!',
+        position: 'top',
+      })
     } catch (error) {
       console.error('Error al confirmar el pedido:', error)
-      alert('Hubo un error al confirmar tu pedido. Intenta nuevamente.')
+      Toast.show({
+        type: 'error',
+        text1: 'Hubo un error al confirmar tu pedido. Intenta nuevamente.',
+        position: 'top',
+      })
     }
   }
 
@@ -36,10 +45,18 @@ const CartScreen = () => {
     try {
       await clearCart(localId)
       dispatch(clearCartLocal())
-      alert('Carrito limpiado con éxito!')
+      Toast.show({
+        type: 'success',
+        text1: 'Carrito vaciado con éxito!',
+        position: 'top',
+      })
     } catch (error) {
-      console.error('Error al limpiar el carrito:', error)
-      alert('Hubo un error al limpiar el carrito. Intenta nuevamente.')
+      console.error('Error al vaciar el carrito:', error)
+      Toast.show({
+        type: 'error',
+        text1: 'Hubo un error al vaciar el carrito. Intenta nuevamente.',
+        position: 'top',
+      })
     }
   }
 
@@ -47,10 +64,18 @@ const CartScreen = () => {
     try {
       await removeFromCart({localId, productId})
       dispatch(removeItems(productId))
-      alert('Producto eliminado del carrito con éxito!')
+      Toast.show({
+        type: 'success',
+        text1: 'Producto eliminado del carrito con éxito!',
+        position: 'top',
+      })
     } catch (error) {
       console.error('Error al eliminar el producto del carrito:', error)
-      alert('Hubo un error al eliminar el producto del carrito. Intenta nuevamente.')
+      Toast.show({
+        type: 'error',
+        text1: 'Hubo un error al eliminar el producto del carrito. Intenta nuevamente.',
+        position: 'top',
+      })
     }
   }
 
@@ -106,7 +131,18 @@ const CartScreen = () => {
           />
 
           :
-          <Text>Aún no hay productos en el carrito</Text>
+          <View style={styles.emptyContainer}>
+            <Icon name="remove-shopping-cart" size={80} color={colors.mediumGray} />
+            <Text style={styles.emptyTitle}>Tu carrito está vacío</Text>
+            <Text style={styles.emptySubtitle}>¿Querés ver nuestros productos?</Text>
+            <Pressable
+              style={styles.goToShopButton}
+              onPress={() => navigation.navigate('Shop', { screen: 'Categorías' })}
+            >
+              <Text style={styles.goToShopButtonText}>Ir a la tienda</Text>
+              <Icon name="store" size={20} color={colors.white} />
+            </Pressable>
+          </View>
       }
     </>
   )
@@ -115,6 +151,34 @@ const CartScreen = () => {
 export default CartScreen
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  goToShopButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.remGreenLight,
+    padding: 12,
+    borderRadius: 5,
+  },
+  goToShopButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Bold',
+    marginRight: 8,
+  },
   checkIcon: {
     marginRight: 16,
     color: colors.white,

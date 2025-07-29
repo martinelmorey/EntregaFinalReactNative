@@ -6,6 +6,7 @@ import { addItems } from '../../features/cart/cartSlice';
 import { useAddToListaMutation } from '../../services/lista/listaApi';
 import { useAddToCartMutation } from '../../services/cart/cartApi.js';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import Toast from 'react-native-toast-message'
 
 const ProductScreen = ({ route }) => {
     const localId = useSelector(state => state.userReducer.localId)
@@ -27,14 +28,38 @@ const ProductScreen = ({ route }) => {
         }
     }
 
+    const handleAddToList = async () => {
+        try {
+            await addToLista({localId: localId, product: product})
+            Toast.show({
+                type: 'success',
+                text1: '¡Producto agregado a la lista!',
+                position: 'top',
+            })
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: 'Hubo un error al agregar el producto a la lista. Intenta nuevamente.',
+                position: 'top',
+            })
+        }
+    }
+
     const handleAddToCart = async () => {
         try {
           await addToCart({localId: localId, product: product})
           dispatch(addItems({product: product, quantity: quantity}))
-          alert('¡Producto agregado al carrito!')
+          Toast.show({
+            type: 'success',
+            text1: '¡Producto agregado al carrito!',
+            position: 'top',
+          })
         } catch (error) {
-          console.error('Error al agregar el producto al carrito:', error)
-          alert('Hubo un error al agregar el producto al carrito. Intenta nuevamente.')
+          Toast.show({
+            type: 'error',
+            text1: 'Hubo un error al agregar el producto al carrito. Intenta nuevamente.',
+            position: 'top',
+          })
         }
     }
 
@@ -107,7 +132,7 @@ const ProductScreen = ({ route }) => {
                 </Pressable>
                 <Pressable
                     style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToListButton]}
-                    onPress={() => addToLista({localId: localId, product: product})}
+                    onPress={handleAddToList}
                 >
                     <Ionicons name="heart" size={24} color="white" />
             </Pressable>
@@ -206,7 +231,7 @@ const styles = StyleSheet.create({
         padding: 8,
         paddingHorizontal: 16,
         backgroundColor: colors.remGreenLight,
-        borderRadius: 10,
+        borderRadius: 5,
         marginVertical: 16
     },
     addToListButton: {
@@ -217,7 +242,7 @@ const styles = StyleSheet.create({
         padding: 8,
         paddingHorizontal: 15,
         backgroundColor: colors.remGreenLight,
-        borderRadius: 10,
+        borderRadius: 5,
         marginVertical: 16
     },
     textAddToCart: {
@@ -245,7 +270,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.remGreenLight,
         width: 40,
         height: 40,
-        borderRadius: 20,
+        borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center'
     },

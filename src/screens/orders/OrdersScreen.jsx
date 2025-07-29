@@ -1,10 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Image, Pressable } from 'react-native'
+import { colors } from '../../global/colors'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useSelector } from 'react-redux'
 import { useGetOrdersQuery } from '../../services/orders/ordersApi'
 import Loader from '../../components/Loader'
 
-const OrdersScreen = () => {
+const OrdersScreen = ({navigation}) => {
   const localId = useSelector(state => state.userReducer.localId)
   const { data: ordersItems = [], isLoading, error } = useGetOrdersQuery(localId)
   
@@ -57,7 +59,18 @@ const OrdersScreen = () => {
           ListHeaderComponent={<Text style={styles.screenTitle}>Mis Pedidos</Text>}
         />
       ) : (
-        <Text style={styles.message}>No tienes pedidos</Text>
+        <View style={styles.emptyContainer}>
+          <Icon name="receipt" size={80} color={colors.mediumGray} />
+          <Text style={styles.emptyTitle}>Aún no tienes pedidos</Text>
+          <Text style={styles.emptySubtitle}>¿Querés hacer un pedido?</Text>
+          <Pressable
+            style={styles.goToShopButton}
+            onPress={() => navigation.navigate('Shop')}
+          >
+            <Text style={styles.goToShopButtonText}>Hacer un pedido</Text>
+            <Icon name="store" size={20} color={colors.white} />
+          </Pressable>
+        </View>
       )}
     </View>
   )
@@ -66,6 +79,34 @@ const OrdersScreen = () => {
 export default OrdersScreen
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  goToShopButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.remGreenLight,
+    padding: 12,
+    borderRadius: 5,
+  },
+  goToShopButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Bold',
+    marginRight: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: '#f9f9f9',
