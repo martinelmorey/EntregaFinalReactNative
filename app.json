@@ -27,6 +27,11 @@
     "plugins": [
       "expo-font",
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5ed5ab9d-4209-4757-9627-9ffcfec285b8"
+      }
+    }
   }
 }
