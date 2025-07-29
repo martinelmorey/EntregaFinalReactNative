@@ -1,12 +1,11 @@
-import { StyleSheet, View, Image, Pressable, FlatList } from 'react-native'
-import FlatCard from '../../components/FlatCard'
-import TextUbuntuTitle from '../../components/TextUbuntuTitle'
+import { StyleSheet, View, Image, Pressable, FlatList, Text } from 'react-native'
 import { useDispatch } from 'react-redux'
 import {
   setCategorieSelected,
   setSubCategorySelected,
   setParentCategorySlug
 } from '../../features/shop/shopSlice'
+import { colors } from '../../global/colors'
 
 const SubCategoriesScreen = ({ route, navigation }) => {
   const { category } = route.params
@@ -30,13 +29,20 @@ const SubCategoriesScreen = ({ route, navigation }) => {
 
 
   const renderItem = ({ item }) => (
-    <Pressable onPress={() => onPressSubcat(item)}>
-      <FlatCard>
-        <View style={styles.row}>
-          <TextUbuntuTitle>{item.title}</TextUbuntuTitle>
-          {!!item.image && <Image width={80} height={40} source={{ uri: item.image }} />}
-        </View>
-      </FlatCard>
+    <Pressable 
+      onPress={() => onPressSubcat(item)}
+      style={styles.categoryButton}
+    >
+      {!!item.image && (
+        <Image 
+          style={styles.backgroundImage} 
+          source={{ uri: item.image }} 
+          resizeMode="cover"
+        />
+      )}
+      <View style={styles.categoryContainer}>
+        <Text style={styles.categoryTitle}>{item.title}</Text>
+      </View>
     </Pressable>
   )
 
@@ -52,7 +58,33 @@ const SubCategoriesScreen = ({ route, navigation }) => {
 export default SubCategoriesScreen
 
 const styles = StyleSheet.create({
-  row: {
+  categoryButton: {
+    width: '90%',
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+    marginHorizontal: 20,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  backgroundImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+  categoryTitle: {
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Bold',
+    textAlign: 'center',
+    color: colors.white,
+  },
+  categoryContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

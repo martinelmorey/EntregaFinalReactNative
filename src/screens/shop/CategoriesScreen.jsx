@@ -1,6 +1,5 @@
 import { StyleSheet, View, Image, Pressable, FlatList, Text } from 'react-native'
-import FlatCard from '../../components/FlatCard'
-import TextUbuntuTitle from '../../components/TextUbuntuTitle'
+import { colors } from '../../global/colors'
 import { useDispatch } from 'react-redux'
 import { setCategorieSelected } from '../../features/shop/shopSlice'
 import { useGetCategoriesQuery } from '../../services/shop/shopApi'
@@ -19,13 +18,20 @@ const CategoriesScreen = ({ navigation }) => {
   }
 
   const renderCategoryItem = ({ item }) => (
-    <Pressable onPress={() => onPressCategory(item)}>
-      <FlatCard>
-        <View style={styles.categoryContainer}>
-          <TextUbuntuTitle>{item.title}</TextUbuntuTitle>
-          {!!item.image && <Image width={80} height={40} source={{ uri: item.image }} />}
-        </View>
-      </FlatCard>
+    <Pressable 
+      onPress={() => onPressCategory(item)}
+      style={styles.categoryButton}
+    >
+      {!!item.image && (
+        <Image 
+          style={styles.backgroundImage} 
+          source={{ uri: item.image }} 
+          resizeMode="cover"
+        />
+      )}
+      <View style={styles.categoryContainer}>
+        <Text style={styles.categoryTitle}>{item.title}</Text>
+      </View>
     </Pressable>
   )
 
@@ -46,6 +52,32 @@ const styles = StyleSheet.create({
     fontFamily: 'Ubuntu-Regular',
     textAlign: 'center',
     marginTop: 20,
+  },
+  categoryButton: {
+    width: '90%',
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginHorizontal: 20,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  backgroundImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+  categoryTitle: {
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Bold',
+    textAlign: 'center',
+    color: colors.white,
   },
   categoryContainer: {
     flexDirection: "row",
