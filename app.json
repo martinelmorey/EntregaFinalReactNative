@@ -19,6 +19,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "process.env.EXPO_PUBLIC_GMAPS_API_KEY"
+        }
+      },
       "edgeToEdgeEnabled": true
     },
     "web": {
