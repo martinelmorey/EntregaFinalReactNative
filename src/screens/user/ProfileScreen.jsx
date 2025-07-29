@@ -46,10 +46,10 @@ const ProfileScreen = () => {
     const logout = async () => {
         try {
             const result = await db.runAsync('DELETE FROM sessions WHERE localId = $localId', {$localId: localId})
-            console.log("Sesion cerrada", result)
+            //console.log("Sesion cerrada", result)
             dispatch(clearUser())
         } catch (error) {
-            console.log("Error cerrando sesion", error)
+            //console.log("Error cerrando sesion", error)
         }
     }
 
@@ -73,7 +73,7 @@ const ProfileScreen = () => {
                     setLocation(location);
                 }
             } catch (error) {
-                console.log("Error al obtener la ubicación:", error);
+                //console.log("Error al obtener la ubicación:", error);
             } finally {
                 setLocationLoaded(true);
             }

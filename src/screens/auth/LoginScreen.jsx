@@ -37,7 +37,7 @@ const LoginScreen = ({ navigation, route }) => {
     const saveUserInDB = async (email, localId) => {
         try {
             if (!db) {
-                console.log("Base de datos no inicializada")
+                //console.log("Base de datos no inicializada")
                 return
             }
             
@@ -48,10 +48,10 @@ const LoginScreen = ({ navigation, route }) => {
                 }
             } else {
                 const result = await db.runAsync('INSERT INTO sessions (email, localId) VALUES (?, ?)', email, localId)
-                console.log("Usuario guardado en DB", result)
+                //console.log("Usuario guardado en DB", result)
             }
         } catch (error) {
-            console.log("Error guardando usuario en DB", error)
+            //console.log("Error guardando usuario en DB", error)
         }
     }
 

@@ -19,9 +19,9 @@ export const initializeDB = async (db) => {
         localId TEXT NOT NULL
       );
     `);
-    console.log("Base de datos inicializada");
+    //console.log("Base de datos inicializada");
   } catch (error) {
-    console.log("Error al inicializar la base de datos", error);
+    //console.log("Error al inicializar la base de datos", error);
   }
 };
 

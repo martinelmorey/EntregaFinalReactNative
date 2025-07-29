@@ -6,10 +6,7 @@ import { signupSchema } from '../../validations/yupSchema';
 import {LinearGradient} from 'expo-linear-gradient'
 import AnimatedError from '../../components/AnimatedError';
 
-
-
 const textInputWidth = Dimensions.get('window').width * 0.7
-
 
 const SignupScreen = ({ navigation }) => {
 
@@ -25,7 +22,7 @@ const SignupScreen = ({ navigation }) => {
 
     useEffect(() => {
         if (result.status === "fulfilled") {
-            console.log("Usuario creado exitosamente")
+            //console.log("Usuario creado exitosamente")
             navigation.navigate("Login", { message: "Usuario creado con éxito" })
         } else if(result.status === "rejected") {
             setError("Hubo un error al crear el usuario")
