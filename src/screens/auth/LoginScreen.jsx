@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Pressable, Dimensions, Image } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Pressable, Dimensions, Image, Switch } from 'react-native'
 import { colors } from '../../global/colors';
 import { useEffect, useState } from 'react';
 import { useLoginMutation } from '../../services/auth/authApi';
@@ -16,6 +16,7 @@ const LoginScreen = ({ navigation, route }) => {
     const db = useSQLiteContext()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [persistSession, setPersistSession] = useState(false)
     const [error, setError] = useState("")
     const [errorEmail, setErrorEmail] = useState("")
     const [errorPassword, setErrorPassword] = useState("")
@@ -79,14 +80,16 @@ const LoginScreen = ({ navigation, route }) => {
     useEffect(()=>{
         async function saveUser(){
             if(result.status==="fulfilled"){
+                if(persistSession){
+                    saveUserInDB(result.data.email, result.data.localId)
+                }
                 dispatch(setUser({email: result.data.email, localId: result.data.localId}))
-                saveUserInDB(result.data.email, result.data.localId)
             }else if(result.status==="rejected"){
                 setError("Hubo un error al iniciar sesión")
             }
         }
         saveUser()
-    },[result])
+    },[result, dispatch])
 
 
     return (
@@ -142,6 +145,17 @@ const LoginScreen = ({ navigation, route }) => {
             </View>
 
             <Pressable style={styles.btn} onPress={onSubmit}><Text style={styles.btnText}>Iniciar sesión</Text></Pressable>
+        
+            <View style={styles.switchContainer}>
+                <Text style={styles.whiteText}>Recordar mi sesión</Text>
+                <Switch
+                    value={persistSession}
+                    onValueChange={()=>setPersistSession(!persistSession)}
+                    trackColor={{false: colors.gray, true: colors.remGreenLight}}
+                    thumbColor={persistSession ? colors.remGreenLight : colors.gray}
+                />
+            </View>
+
         </LinearGradient>
     )
 }
@@ -182,6 +196,11 @@ const styles = StyleSheet.create({
     footTextContainer: {
         flexDirection: 'row',
         gap: 8,
+    },
+    switchContainer: {
+        flexDirection: 'row',
+        gap: 8,
+        alignItems: 'center',
     },
     whiteText: {
         color: colors.white

@@ -38,10 +38,9 @@ const ProductsScreen = ({ navigation }) => {
     return []
   }, [subcategorySlug, bySub, byCat, byCatParent])
 
-  const isLoading = lSub || lCat || lCatParent
-  const error = eSub || eCat || eCatParent
-
-
+  // Memoizamos estos valores para evitar recálculos innecesarios
+  const isLoading = useMemo(() => lSub || lCat || lCatParent, [lSub, lCat, lCatParent])
+  const error = useMemo(() => eSub || eCat || eCatParent, [eSub, eCat, eCatParent])
 
   useEffect(() => {
     if (keyword) {
