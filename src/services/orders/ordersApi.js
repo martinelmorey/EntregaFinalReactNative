@@ -26,7 +26,7 @@ export const ordersApi = createApi({
                     items: cartItems,
                     total: cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0),
                     date: new Date().toLocaleString(),
-                    status: 'confirmed',
+                    status: 'Confirmado',
                     orderedAt: Date.now()
                 }
             }),

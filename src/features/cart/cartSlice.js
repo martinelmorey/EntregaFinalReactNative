@@ -27,7 +27,7 @@ const cartSlice = createSlice({
              state.total = state.cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
              state.updatedAt = new Date().toLocaleString();
         },
-        clearCart : (state,action)=>{
+        clearCartLocal : (state,action)=>{
             state.cartItems = []
             state.updatedAt = new Date().toLocaleString();
             state.total=0
@@ -36,6 +36,6 @@ const cartSlice = createSlice({
     }   
 })
 
-export const {addItems,removeItems,clearCart } = cartSlice.actions
+export const {addItems,removeItems,clearCartLocal } = cartSlice.actions
 
 export default cartSlice.reducer

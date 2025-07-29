@@ -7,6 +7,7 @@ import { authApi } from "../services/auth/authApi";
 import { userApi } from "../services/user/userApi";
 import { listaApi } from "../services/lista/listaApi";
 import { ordersApi } from "../services/orders/ordersApi";
+import { cartApi } from "../services/cart/cartApi.js";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 const store = configureStore({
@@ -19,6 +20,7 @@ const store = configureStore({
         [userApi.reducerPath]: userApi.reducer,
         [listaApi.reducerPath]: listaApi.reducer,
         [ordersApi.reducerPath]: ordersApi.reducer,
+        [cartApi.reducerPath]: cartApi.reducer,
     },
     middleware: (getDefaultMiddleware)=>(getDefaultMiddleware()
                         .concat(shopApi.middleware)
@@ -26,6 +28,7 @@ const store = configureStore({
                         .concat(userApi.middleware)
                         .concat(listaApi.middleware)
                         .concat(ordersApi.middleware)
+                        .concat(cartApi.middleware)
                     )
 })
 

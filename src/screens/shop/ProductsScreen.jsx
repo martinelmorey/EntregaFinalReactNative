@@ -38,7 +38,6 @@ const ProductsScreen = ({ navigation }) => {
     return []
   }, [subcategorySlug, bySub, byCat, byCatParent])
 
-  // Memoizamos estos valores para evitar recálculos innecesarios
   const isLoading = useMemo(() => lSub || lCat || lCatParent, [lSub, lCat, lCatParent])
   const error = useMemo(() => eSub || eCat || eCatParent, [eSub, eCat, eCatParent])
 

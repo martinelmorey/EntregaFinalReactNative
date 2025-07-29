@@ -4,6 +4,7 @@ import { colors } from '../../global/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItems } from '../../features/cart/cartSlice';
 import { useAddToListaMutation } from '../../services/lista/listaApi';
+import { useAddToCartMutation } from '../../services/cart/cartApi.js';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const ProductScreen = ({ route }) => {
@@ -12,6 +13,7 @@ const ProductScreen = ({ route }) => {
     const { width } = useWindowDimensions()
     const [quantity, setQuantity] = useState(1)
     const [addToLista] = useAddToListaMutation() 
+    const [addToCart] = useAddToCartMutation()
     const dispatch = useDispatch()
     
     const incrementQuantity = () => {
@@ -22,6 +24,17 @@ const ProductScreen = ({ route }) => {
     const decrementQuantity = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1)
+        }
+    }
+
+    const handleAddToCart = async () => {
+        try {
+          await addToCart({localId: localId, product: product})
+          dispatch(addItems({product: product, quantity: quantity}))
+          alert('¡Producto agregado al carrito!')
+        } catch (error) {
+          console.error('Error al agregar el producto al carrito:', error)
+          alert('Hubo un error al agregar el producto al carrito. Intenta nuevamente.')
         }
     }
 
@@ -87,7 +100,7 @@ const ProductScreen = ({ route }) => {
             <View style={styles.buttonsContainer}>
                 <Pressable
                     style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToCartButton]}
-                    onPress={() => dispatch(addItems({product: product, quantity: quantity}))}
+                    onPress={handleAddToCart}
                     disabled={product.stock <= 0}
                 >
                     <Text style={styles.textAddToCart}>Agregar al carrito</Text>

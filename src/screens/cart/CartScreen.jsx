@@ -3,8 +3,9 @@ import { colors } from '../../global/colors'
 import FlatCard from '../../components/FlatCard'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useSelector, useDispatch } from 'react-redux'
-import { removeItems, clearCart } from '../../features/cart/cartSlice'
+import { removeItems, clearCartLocal } from '../../features/cart/cartSlice'
 import { useAddOrderMutation } from '../../services/orders/ordersApi'
+import { useClearCartMutation, useRemoveFromCartMutation } from '../../services/cart/cartApi'
 
 const CartScreen = () => {
 
@@ -14,13 +15,16 @@ const CartScreen = () => {
   const dispatch = useDispatch()
 
   const [addOrder] = useAddOrderMutation()
+  const [clearCart] = useClearCartMutation()
+  const [removeFromCart] = useRemoveFromCartMutation()
   
   const handleConfirmOrder = async () => {
     if (cartItems.length === 0) return
     
     try {
       await addOrder({localId, cartItems})
-      dispatch(clearCart())
+      await clearCart(localId)
+      dispatch(clearCartLocal())
       alert('¡Pedido confirmado con éxito!')
     } catch (error) {
       console.error('Error al confirmar el pedido:', error)
@@ -28,9 +32,10 @@ const CartScreen = () => {
     }
   }
 
-  const handleClearCart = () => {
+  const handleClearCart = async () => {
     try {
-      dispatch(clearCart())
+      await clearCart(localId)
+      dispatch(clearCartLocal())
       alert('Carrito limpiado con éxito!')
     } catch (error) {
       console.error('Error al limpiar el carrito:', error)
@@ -38,16 +43,30 @@ const CartScreen = () => {
     }
   }
 
+  const handleDelete = async (productId) => {
+    try {
+      await removeFromCart({localId, productId})
+      dispatch(removeItems(productId))
+      alert('Producto eliminado del carrito con éxito!')
+    } catch (error) {
+      console.error('Error al eliminar el producto del carrito:', error)
+      alert('Hubo un error al eliminar el producto del carrito. Intenta nuevamente.')
+    }
+  }
+
+
   const FooterComponent = () => (
     <View style={styles.footerContainer}>
       <Text style={styles.footerTotal}>Total: $ {total} </Text>
       <View style={styles.footerButtonsContainer}>
-      <Pressable onPress={handleClearCart} style={styles.clearButton}>
-        <Text style={styles.clearButtonText}>Limpiar carrito <Icon name="delete" size={24} style={styles.trashIcon} /></Text>
-      </Pressable>
-      <Pressable onPress={handleConfirmOrder} style={styles.confirmButton}>
-        <Text style={styles.confirmButtonText}>Confirmar <Icon name="check" size={24} style={styles.checkIcon} /></Text>
-      </Pressable>
+        <Pressable onPress={handleClearCart} style={styles.clearButton}>
+          <Text style={styles.clearButtonText}>Limpiar carrito</Text>
+          <Icon name="delete" size={20} color={colors.white} />
+        </Pressable>
+        <Pressable onPress={handleConfirmOrder} style={styles.confirmButton}>
+          <Text style={styles.confirmButtonText}>Confirmar</Text>
+          <Icon name="check" size={20} color={colors.white} />
+        </Pressable>
       </View>
     </View>
   )
@@ -66,7 +85,7 @@ const CartScreen = () => {
         <Text style={styles.price}>Precio unitario: $ {item.price}</Text>
         <Text style={styles.quantity}>Cantidad: {item.quantity}</Text>
         <Text style={styles.total}>Total: $ {item.quantity * item.price}</Text>
-        <Pressable onPress={() => dispatch(removeItems(item.id))}>
+        <Pressable onPress={() => handleDelete(item.id)}>
           <Icon name="delete" size={24} style={styles.trashIcon} />
         </Pressable>
       </View>
@@ -102,53 +121,41 @@ const styles = StyleSheet.create({
   },
   footerButtonsContainer: {
     flexDirection: 'row',
-    gap: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '100%',
+    marginTop: 16,
+    justifyContent: 'space-between',
   },
   clearButton: {
-    padding: 8,
-    paddingHorizontal: 16,
+    flex: 1,
+    padding: 12,
     backgroundColor: colors.black,
     borderRadius: 5,
-    width: 170,
-    textAlign: 'center',
-    alignSelf: 'center',
+    marginRight: 8,
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8
   },
   clearButtonText: {
     color: colors.white,
     fontSize: 16,
-    fontWeight: '700',
-    textAlign: 'center',
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
+    fontFamily: 'Ubuntu-Bold',
+    marginRight: 8,
   }, 
   confirmButton: {
-    padding: 8,
-    paddingHorizontal: 16,
+    flex: 1,
+    padding: 12,
     backgroundColor: colors.remGreenLight,
     borderRadius: 5,
-    width: 170,
-    textAlign: 'center',
-    alignSelf: 'center',
+    marginLeft: 8,
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8
   },
   confirmButtonText: {
     color: colors.white,
     fontSize: 16,
-    fontWeight: '700',
-    textAlign: 'center',
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
+    fontFamily: 'Ubuntu-Bold',
+    marginRight: 8,
   },
   cartContainer: {
     flexDirection: 'row',
@@ -180,11 +187,11 @@ const styles = StyleSheet.create({
   },
   trashIcon: {
     marginRight: 16,
-    color: colors.white,
+    color: colors.black,
   },
   footerContainer: {
-    padding: 32,
-    gap: 8,
+    padding: 24,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center'
   },
