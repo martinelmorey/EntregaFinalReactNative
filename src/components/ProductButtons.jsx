@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItems } from '../features/cart/cartSlice';
-import { useAddToListaMutation } from '../services/lista/listaApi';
+import { addItems } from '../features/cart/cartSlice.js';
+import { useAddToListaMutation } from '../services/lista/listaApi.js';
 import { useAddToCartMutation } from '../services/cart/cartApi.js';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Toast from 'react-native-toast-message'
-import { colors } from '../global/colors';
+import { colors } from '../global/colors.js';
 
-const ProductActions = ({ 
+const ProductButtons = ({ 
     product, 
     showQuantitySelector = false, 
     initialQuantity = 1,
@@ -131,7 +131,7 @@ const ProductActions = ({
     )
 }
 
-export default ProductActions
+export default ProductButtons
 
 const styles = StyleSheet.create({
     container: {

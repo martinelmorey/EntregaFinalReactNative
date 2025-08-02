@@ -5,7 +5,7 @@ import FlatCard from '../../components/FlatCard'
 import Search from '../../components/Search'
 import Loader from '../../components/Loader'
 import { useGetProductsByCategoryQuery, useGetProductsBySubcategoryQuery } from '../../services/shop/shopApi'
-import ProductActions from '../../components/ProductActions'
+import ProductActions from '../../components/ProductButtons'
 
 
 const ProductsScreen = ({ navigation }) => {

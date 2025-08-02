@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, ScrollView, useWindowDimensions } from 'react-native'
 import { colors } from '../../global/colors';
-import ProductActions from '../../components/ProductActions'
+import ProductActions from '../../components/ProductButtons'
 
 const ProductScreen = ({ route }) => {
     const { product } = route.params
