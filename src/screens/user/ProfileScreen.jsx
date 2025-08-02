@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable, Image, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Image, ActivityIndicator, ScrollView } from 'react-native'
 import { colors } from '../../global/colors'
 import CameraIcon from '../../components/CameraIcon'
 import { useState, useEffect } from 'react'
@@ -83,61 +83,61 @@ const ProfileScreen = () => {
     }, []);
 
     return (
-        <View style={styles.profileContainer}>
-            <View style={styles.imageProfileContainer}>
-                {
-                    image
-                        ?
-                        <Image source={{ uri: image }} resizeMode='cover' style={styles.profileImage} />
-                        :
-                        <Text style={styles.textProfilePlaceHolder}>{user.charAt(0).toUpperCase()}</Text>
-                }
-                <Pressable onPress={pickImage} style={({ pressed }) => [{ opacity: pressed ? 0.90 : 1 }, styles.cameraIcon]} >
-                    <CameraIcon />
-                </Pressable>
-            </View>
-            <Text style={styles.profileData}>Email: {user}</Text>
-            <View style={styles.titleContainer}>
-                <Text>Mi ubicación:</Text>
-            </View>
-            <View style={styles.mapContainer}>
-                {
-                    location
-                        ?
-                        <MapView
-                            style={styles.map}
-                            initialRegion={{
-                                latitude: location.coords.latitude,
-                                longitude: location.coords.longitude,
-                                latitudeDelta: 0.0922,
-                                longitudeDelta: 0.0421,
-                            }}
-                        >
-                            <Marker coordinate={{ "latitude": location.coords.latitude, "longitude": location.coords.longitude }} title={"Usuario"} />
-                        </MapView>
-                        :
-                        (
-                            locationLoaded
-                                ?
-                                <Text>Hubo un problema al obtener la ubicación</Text>
-                                :
-                                <ActivityIndicator />
-                        )
-
-                }
-
-            </View>
-            <View style={styles.placeDescriptionContainer}>
-                <View style={styles.addressContainer}>
-                    <Text style={styles.address}>{address || ""}</Text>
+            <ScrollView contentContainerStyle={styles.profileContainer}>
+                <View style={styles.imageProfileContainer}>
+                    {
+                        image
+                            ?
+                            <Image source={{ uri: image }} resizeMode='cover' style={styles.profileImage} />
+                            :
+                            <Text style={styles.textProfilePlaceHolder}>{user.charAt(0).toUpperCase()}</Text>
+                    }
+                    <Pressable onPress={pickImage} style={({ pressed }) => [{ opacity: pressed ? 0.90 : 1 }, styles.cameraIcon]} >
+                        <CameraIcon />
+                    </Pressable>
                 </View>
-            </View>
-            <Pressable onPress={logout} style={({pressed}) => [{opacity: pressed ? 0.9 : 1}, styles.logoutButton]}>
-                <Ionicons name="log-out-outline" size={24} color={styles.logoutText.color || "white"} />
-                <Text style={styles.logoutText}>Cerrar sesión</Text>
-            </Pressable>
-        </View>
-    )
+                <Text style={styles.profileData}>Email: {user}</Text>
+                <View style={styles.titleContainer}>
+                    <Text>Mi ubicación:</Text>
+                </View>
+                <View style={styles.mapContainer}>
+                    {
+                        location
+                            ?
+                            <MapView
+                                style={styles.map}
+                                initialRegion={{
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }}
+                            >
+                                <Marker coordinate={{ "latitude": location.coords.latitude, "longitude": location.coords.longitude }} title={"Usuario"} />
+                            </MapView>
+                            :
+                            (
+                                locationLoaded
+                                    ?
+                                    <Text>Hubo un problema al obtener la ubicación</Text>
+                                    :
+                                    <ActivityIndicator />
+                            )
+
+                    }
+
+                </View>
+                <View style={styles.placeDescriptionContainer}>
+                    <View style={styles.addressContainer}>
+                        <Text style={styles.address}>{address || ""}</Text>
+                    </View>
+                </View>
+                <Pressable onPress={logout} style={({pressed}) => [{opacity: pressed ? 0.9 : 1}, styles.logoutButton]}>
+                    <Ionicons name="log-out-outline" size={24} color={styles.logoutText.color || "white"} />
+                    <Text style={styles.logoutText}>Cerrar sesión</Text>
+                </Pressable>
+            </ScrollView>
+        )
 }
 
 export default ProfileScreen
@@ -161,9 +161,11 @@ const styles = StyleSheet.create({
         marginLeft: 8
     },
     profileContainer: {
-        paddingTop: 32,
-        justifyContent: 'center',
-        alignItems: 'center'
+        flexGrow: 1,        // Permite que el contenido se estire si no hay mucho texto
+        paddingTop: 50,
+        paddingBottom: 100,
+        alignItems: 'center',
+        width: '100%',
     },
     imageProfileContainer: {
         width: 128,
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
         borderRadius: 128
     },
     mapContainer: {
-        width: '100%',
+        width: '80%',
         height: 240,
         overflow: "hidden",
         elevation: 5,
@@ -207,5 +209,16 @@ const styles = StyleSheet.create({
     placeDescriptionContainer: {
         flexDirection: 'row',
         gap: 16
-    }
+    },
+    addressContainer: {
+        width: '80%',
+        padding: 16,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    address: {
+        fontSize: 12,
+        fontWeight: 'bold'
+    }   
 })
