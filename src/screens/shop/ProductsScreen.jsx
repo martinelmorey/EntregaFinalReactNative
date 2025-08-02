@@ -1,20 +1,21 @@
-import { StyleSheet, Text, Pressable, FlatList, Image, useWindowDimensions } from 'react-native'
+import { StyleSheet, Text, Pressable, FlatList, Image, useWindowDimensions, View } from 'react-native'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import FlatCard from '../../components/FlatCard'
 import Search from '../../components/Search'
-import { useGetProductsByCategoryQuery, useGetProductsBySubcategoryQuery } from '../../services/shop/shopApi'
 import Loader from '../../components/Loader'
+import { useGetProductsByCategoryQuery, useGetProductsBySubcategoryQuery } from '../../services/shop/shopApi'
+import ProductActions from '../../components/ProductActions'
+
 
 const ProductsScreen = ({ navigation }) => {
-  
   const { width } = useWindowDimensions()
   const [keyword, setKeyword] = useState('')
   const [productsFiltered, setProductsFiltered] = useState([])
-
   const categorySlug = useSelector(state => state.shopReducer.categorySelected)
   const subcategorySlug = useSelector(state => state.shopReducer.subcategorySelected)
   const parentCategorySlug = useSelector(state => state.shopReducer.parentCategorySlug)
+  
 
   const { data: bySub = [], isLoading: lSub, error: eSub } =
     useGetProductsBySubcategoryQuery(subcategorySlug || '', {
@@ -42,11 +43,18 @@ const ProductsScreen = ({ navigation }) => {
   const error = useMemo(() => eSub || eCat || eCatParent, [eSub, eCat, eCatParent])
 
   useEffect(() => {
-    if (keyword) {
-      const k = keyword.toLowerCase()
-      setProductsFiltered(baseList.filter(p => p.title?.toLowerCase().includes(k)))
-    } else {
-      setProductsFiltered(baseList)
+    if (!keyword) {
+      if (productsFiltered.length !== baseList.length) {
+        setProductsFiltered(baseList)
+      }
+      return
+    }
+  
+    const k = keyword.toLowerCase()
+    const filtered = baseList.filter(p => p.title?.toLowerCase().includes(k))
+  
+    if (filtered.length !== productsFiltered.length) {
+      setProductsFiltered(filtered)
     }
   }, [keyword, baseList])
 
@@ -61,10 +69,10 @@ const ProductsScreen = ({ navigation }) => {
             resizeMode='contain'
             style={styles.productImage}
         />
-        <Text style={styles.productBrand}>{item.brand}</Text>
+        <Text style={styles.productBrand}>{item.brand} - {item.categorySlug}</Text>
         <Text style={styles.productTitle}>{item.title}</Text>
         <Text style={styles.productPrice}>${item.price}</Text>
-        <Text style={styles.productSubcategory}>{item.subcategory}</Text>
+        <ProductActions product={item}/>
       </FlatCard>
     </Pressable>
   )
@@ -102,9 +110,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   productBrand: {
-    fontSize: 14,
+    fontSize: 10,
     fontFamily: 'Ubuntu-Regular',
     textAlign: 'center',
+    textTransform: 'uppercase', 
+    marginBottom: 5,
   },
   message: {
     fontSize: 16,
@@ -120,12 +130,12 @@ const styles = StyleSheet.create({
   },
   productImage: {
     width: '100%',
-    resizeMode: 'contain',
-    borderRadius: 4,
-    marginVertical: 0,
+    resizeMode: 'cover',
+    borderRadius: 8,
+    marginBottom:10
   },
   productCard: {
-    padding: 20,
+    padding: 30,
     backgroundColor: '#fff',
     marginVertical: 20,
   }

@@ -1,67 +1,10 @@
-import { StyleSheet, Text, View, Pressable, Image, ScrollView, useWindowDimensions } from 'react-native'
-import { useState } from 'react';
+import { StyleSheet, Text, View, Image, ScrollView, useWindowDimensions } from 'react-native'
 import { colors } from '../../global/colors';
-import { useDispatch, useSelector } from 'react-redux';
-import { addItems } from '../../features/cart/cartSlice';
-import { useAddToListaMutation } from '../../services/lista/listaApi';
-import { useAddToCartMutation } from '../../services/cart/cartApi.js';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import Toast from 'react-native-toast-message'
+import ProductActions from '../../components/ProductActions'
 
 const ProductScreen = ({ route }) => {
-    const localId = useSelector(state => state.userReducer.localId)
     const { product } = route.params
     const { width } = useWindowDimensions()
-    const [quantity, setQuantity] = useState(1)
-    const [addToLista] = useAddToListaMutation() 
-    const [addToCart] = useAddToCartMutation()
-    const dispatch = useDispatch()
-    
-    const incrementQuantity = () => {
-        if (quantity < product.stock) {
-            setQuantity(quantity + 1)
-        }
-    }
-    const decrementQuantity = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1)
-        }
-    }
-
-    const handleAddToList = async () => {
-        try {
-            await addToLista({localId: localId, product: product})
-            Toast.show({
-                type: 'success',
-                text1: '¡Producto agregado a la lista!',
-                position: 'top',
-            })
-        } catch (error) {
-            Toast.show({
-                type: 'error',
-                text1: 'Hubo un error al agregar el producto a la lista. Intenta nuevamente.',
-                position: 'top',
-            })
-        }
-    }
-
-    const handleAddToCart = async () => {
-        try {
-          await addToCart({localId: localId, product: product})
-          dispatch(addItems({product: product, quantity: quantity}))
-          Toast.show({
-            type: 'success',
-            text1: '¡Producto agregado al carrito!',
-            position: 'top',
-          })
-        } catch (error) {
-          Toast.show({
-            type: 'error',
-            text1: 'Hubo un error al agregar el producto al carrito. Intenta nuevamente.',
-            position: 'top',
-          })
-        }
-    }
 
     return (
         <ScrollView style={styles.productContainer}>
@@ -92,51 +35,9 @@ const ProductScreen = ({ route }) => {
                 product.stock <= 0 && <Text style={styles.noStockText}>Sin Stock</Text>
             }
             <Text style={styles.price}>Precio: ${product.price}</Text>
-
-            {product.stock > 0 && (
-                <View style={styles.quantityContainer}>
-                    <Text style={styles.quantityLabel}>Cantidad:</Text>
-                    <View style={styles.quantitySelector}>
-                        <Pressable 
-                            style={({pressed}) => [
-                                {opacity: pressed ? 0.7 : 1},
-                                styles.quantityButton
-                            ]}
-                            onPress={decrementQuantity}
-                        >
-                            <Ionicons name="remove" size={24} color="white" />
-                        </Pressable>
-                        
-                        <Text style={styles.quantityText}>{quantity}</Text>
-                        
-                        <Pressable 
-                            style={({pressed}) => [
-                                {opacity: pressed ? 0.7 : 1},
-                                styles.quantityButton
-                            ]}
-                            onPress={incrementQuantity}
-                        >
-                            <Ionicons name="add" size={24} color="white" />
-                        </Pressable>
-                    </View>
-                </View>
-            )}
             
-            <View style={styles.buttonsContainer}>
-                <Pressable
-                    style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToCartButton]}
-                    onPress={handleAddToCart}
-                    disabled={product.stock <= 0}
-                >
-                    <Text style={styles.textAddToCart}>Agregar al carrito</Text>
-                </Pressable>
-                <Pressable
-                    style={({ pressed }) => [{ opacity: pressed ? 0.95 : 1 }, styles.addToListButton]}
-                    onPress={handleAddToList}
-                >
-                    <Ionicons name="heart" size={24} color="white" />
-            </Pressable>
-            </View>
+            <ProductActions product={product} showQuantitySelector={true} />
+
         </ScrollView>
     )
 }
@@ -144,12 +45,6 @@ const ProductScreen = ({ route }) => {
 export default ProductScreen
 
 const styles = StyleSheet.create({
-    buttonsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginVertical: 10
-    },
     productContainer: {
         paddingHorizontal: 16,
         marginVertical: 16
@@ -222,63 +117,5 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         paddingVertical: 16,
         fontFamily:'Ubuntu-Medium'
-    },
-    addToCartButton: {
-        width: 290,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 8,
-        paddingHorizontal: 16,
-        backgroundColor: colors.remGreenLight,
-        borderRadius: 5,
-        marginVertical: 16
-    },
-    addToListButton: {
-        width: 65,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 8,
-        paddingHorizontal: 15,
-        backgroundColor: colors.remGreenLight,
-        borderRadius: 5,
-        marginVertical: 16
-    },
-    textAddToCart: {
-        color: colors.white,
-        fontSize: 22,
-        fontFamily:'Ubuntu-Medium',
-        textAlign: 'center',
-    },
-    quantityContainer: {
-        alignItems: 'center',
-        marginVertical: 0
-    },
-    quantityLabel: {
-        fontSize: 16,
-        fontFamily: 'Ubuntu-Medium',
-        marginBottom: 4
-    },
-    quantitySelector: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 10
-    },
-    quantityButton: {
-        backgroundColor: colors.remGreenLight,
-        width: 40,
-        height: 40,
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    quantityText: {
-        fontSize: 18,
-        fontFamily: 'Ubuntu-Bold',
-        marginHorizontal: 20,
-        minWidth: 30,
-        textAlign: 'center'
-    },
+    }
 })
