@@ -5,6 +5,7 @@ import FlatCard from '../../components/FlatCard'
 import Search from '../../components/Search'
 import Loader from '../../components/Loader'
 import { colors } from '../../global/colors'
+import { Ionicons } from '@expo/vector-icons'
 import { useGetProductsByCategoryQuery, useGetProductsBySubcategoryQuery } from '../../services/shop/shopApi'
 import ProductButtons from '../../components/ProductButtons'
 
@@ -78,8 +79,41 @@ const ProductsScreen = ({ navigation }) => {
     </Pressable>
   )
 
+
+  const RenderNoProducts = () => (
+    <View style={styles.wrapper}>  
+      <View style={styles.emptyContainer}>
+        <Ionicons name="storefront-outline" size={80} color={colors.mediumGray} />
+        <Text style={styles.emptyTitle}>No hay productos disponibles</Text>
+        <Text style={styles.emptySubtitle}>
+          {keyword 
+            ? `No encontramos productos que coincidan con "${keyword}"`
+            : 'Esta categoría no tiene productos en este momento'
+          }
+        </Text>
+        {keyword && (
+          <Pressable 
+            style={styles.clearSearchButton}
+            onPress={() => setKeyword('')}
+          >
+            <Text style={styles.clearSearchText}>Limpiar búsqueda</Text>
+          </Pressable>
+        )}
+        <Pressable 
+          style={styles.goBackButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={20} color="white" />
+          <Text style={styles.goBackText}>Volver atrás</Text>
+        </Pressable>
+      </View>
+    </View>
+  )
+
+
   if (isLoading) return <Loader text="Cargando productos..." />
   if (error) return <Text style={styles.message}>Error al cargar productos</Text>
+  if (productsFiltered.length === 0) return <RenderNoProducts />
 
   return (
     <>
@@ -96,6 +130,37 @@ const ProductsScreen = ({ navigation }) => {
 export default ProductsScreen
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  goBackButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.remGreenLight,
+    padding: 12,
+    borderRadius: 5,
+  },
+  goBackText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'Ubuntu-Medium',
+    marginRight: 8,
+  },
   productSubcategory: {
     fontSize: 14,
     fontFamily: 'Ubuntu-Regular',

@@ -17,7 +17,7 @@ const CategoriesScreen = ({ navigation }) => {
     navigation.navigate("Sub Categorías", { category: item }) 
   }
 
-  const renderCategoryItem = ({ item }) => (
+  const RenderCategoryItem = ({ item }) => (
     <Pressable 
       onPress={() => onPressCategory(item)}
       style={styles.categoryButton}
@@ -35,18 +35,50 @@ const CategoriesScreen = ({ navigation }) => {
     </Pressable>
   )
 
+  const RenderNoCategories = () => (
+    <View style={styles.wrapper}>  
+      <View style={styles.emptyContainer}>
+        <Ionicons name="storefront-outline" size={80} color={colors.mediumGray} />
+        <Text style={styles.emptyTitle}>No hay productos disponibles</Text>
+        <Text style={styles.emptySubtitle}>
+          Esta categoría no tiene productos en este momento
+        </Text>
+        <Pressable 
+          style={styles.goBackButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={20} color="white" />
+          <Text style={styles.goBackText}>Volver atrás</Text>
+        </Pressable>
+      </View>
+    </View>
+  )
+
+  if (categories.length === 0) return <RenderNoCategories />
+
   return (
+    <>
     <FlatList
       data={categories}
-      renderItem={renderCategoryItem}
+      renderItem={RenderCategoryItem}
       keyExtractor={item => String(item.id ?? item.slug)}
     />
+    </>
   )
 }
 
 export default CategoriesScreen
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
   message: {
     fontSize: 16,
     fontFamily: 'Ubuntu-Regular',
