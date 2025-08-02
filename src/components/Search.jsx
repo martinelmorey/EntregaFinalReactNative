@@ -5,14 +5,15 @@ import { colors } from '../global/colors'
 const Search = ({keyword,setKeyword}) => {
   return (
     <>
-    <Text style={styles.title}>Busca tus productos aqui</Text>
     <View style={styles.searchContainer}>
       <TextInput
         onChangeText={(text)=>setKeyword(text)}
         style={styles.searchInput}
         value={keyword}
-        />
-        <Ionicons name="search" size={32} color={colors.darkGray} /> 
+        placeholder="Buscar"
+        placeholderTextColor={colors.darkGray}
+      />
+      <Ionicons name="search" size={32} color={colors.darkGray} /> 
     </View>
     </>
   )
@@ -21,24 +22,20 @@ const Search = ({keyword,setKeyword}) => {
 export default Search
 
 const styles = StyleSheet.create({
-    title:{
-        fontSize:16,
-        fontFamily:'Ubuntu-Regular',
-        margin:8
-    },
     searchContainer:{
-        flexDirection:"row",
-        alignItems:'center',
-        gap:8,
-        margin:8
+      flexDirection:"row",
+      alignItems:'center',
+      width: '100%',
+      height: 70,
+      margin: 10,
+      gap:8,
     },
     searchInput:{
-        borderWidth:1,
-        borderColor: colors.darkGray,
-        borderRadius:16,
-        padding:8,
-        paddingHorizontal:16,
-        width:'90%',
-        
+      borderWidth:1,
+      borderColor: colors.darkGray,
+      borderRadius:16,
+      padding:8,
+      paddingHorizontal:16,
+      width:'80%',
     }
 })

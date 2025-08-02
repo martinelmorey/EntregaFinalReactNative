@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
         gap: 5,
     },
     addToCartButton: {
-        width: 290,
+        width: 250,
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',

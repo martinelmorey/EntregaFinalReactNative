@@ -17,7 +17,7 @@ const OrdersScreen = ({navigation}) => {
     <View style={styles.orderContainer}>
       <View style={styles.orderHeader}>
         <Text style={styles.orderDate}>Fecha: {item.date || 'No disponible'}</Text>
-        <Text style={styles.orderStatus}>Estado: <Text style={styles.statusText}>{item.status || 'Pendiente'}</Text></Text>
+        <Text style={styles.orderStatus}>Estado del pedido: <Text style={styles.statusText}>{item.status || 'Pendiente'}</Text></Text>
         <Text style={styles.orderTotal}>Total: <Text style={styles.totalText}>${item.total || 0}</Text></Text>
       </View>
       

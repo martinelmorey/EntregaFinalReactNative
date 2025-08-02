@@ -4,8 +4,9 @@ import { useSelector } from 'react-redux'
 import FlatCard from '../../components/FlatCard'
 import Search from '../../components/Search'
 import Loader from '../../components/Loader'
+import { colors } from '../../global/colors'
 import { useGetProductsByCategoryQuery, useGetProductsBySubcategoryQuery } from '../../services/shop/shopApi'
-import ProductActions from '../../components/ProductButtons'
+import ProductButtons from '../../components/ProductButtons'
 
 
 const ProductsScreen = ({ navigation }) => {
@@ -72,7 +73,7 @@ const ProductsScreen = ({ navigation }) => {
         <Text style={styles.productBrand}>{item.brand} - {item.categorySlug}</Text>
         <Text style={styles.productTitle}>{item.title}</Text>
         <Text style={styles.productPrice}>${item.price}</Text>
-        <ProductActions product={item}/>
+        <ProductButtons  product={item}/>
       </FlatCard>
     </Pressable>
   )
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 22,
     fontFamily: 'Ubuntu-Bold',
-    color: '#2E7D32',
+    color: colors.remGreenLight,
     marginBottom: 5,
     marginTop: 5,
     textAlign: 'center',

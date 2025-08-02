@@ -32,7 +32,7 @@ const CartScreen = ({navigation}) => {
         position: 'top',
       })
     } catch (error) {
-      console.error('Error al confirmar el pedido:', error)
+      //console.error('Error al confirmar el pedido:', error)
       Toast.show({
         type: 'error',
         text1: 'Hubo un error al confirmar tu pedido. Intenta nuevamente.',
@@ -51,7 +51,7 @@ const CartScreen = ({navigation}) => {
         position: 'top',
       })
     } catch (error) {
-      console.error('Error al vaciar el carrito:', error)
+      //console.error('Error al vaciar el carrito:', error)
       Toast.show({
         type: 'error',
         text1: 'Hubo un error al vaciar el carrito. Intenta nuevamente.',
@@ -70,7 +70,7 @@ const CartScreen = ({navigation}) => {
         position: 'top',
       })
     } catch (error) {
-      console.error('Error al eliminar el producto del carrito:', error)
+      //console.error('Error al eliminar el producto del carrito:', error)
       Toast.show({
         type: 'error',
         text1: 'Hubo un error al eliminar el producto del carrito. Intenta nuevamente.',
@@ -110,8 +110,8 @@ const CartScreen = ({navigation}) => {
         <Text style={styles.price}>Precio unitario: $ {item.price}</Text>
         <Text style={styles.quantity}>Cantidad: {item.quantity}</Text>
         <Text style={styles.total}>Total: $ {item.quantity * item.price}</Text>
-        <Pressable onPress={() => handleDelete(item.id)}>
-          <Icon name="delete" size={24} style={styles.trashIcon} />
+        <Pressable style={styles.deleteButton} onPress={() => handleDelete(item.id)}>
+          <Icon name="delete" size={24} style={styles.deleteButtonIcon} />
         </Pressable>
       </View>
     </FlatCard>
@@ -249,8 +249,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700'
   },
-  trashIcon: {
-    marginRight: 16,
+  deleteButton: {
+    width: '100%',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    position: 'relative',
+    float: 'right',
+    right: 10,
+    top: 10,
+  },
+  deleteButtonIcon: {
     color: colors.black,
   },
   footerContainer: {

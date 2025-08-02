@@ -46,7 +46,7 @@ const ListScreen = ({navigation}) => {
       </View>
       <View style={styles.listDescription}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.shortDescription}</Text>
+        <Text style={styles.brand}>{item.brand}</Text>
         <Text style={styles.price}>Precio: $ {item.price}</Text>
         <Pressable onPress={() => removeFromLista({localId, productId: item.id})}>
           <Icon name="delete" size={24} color="#FC7A5E" style={styles.trashIcon} />
