@@ -5,12 +5,14 @@ import { useState, useEffect } from 'react'
 import * as ImagePicker from 'expo-image-picker';
 import { useSelector, useDispatch } from 'react-redux';
 import { usePutProfilePictureMutation } from '../../services/user/userApi';
+import { userApi } from '../../services/user/userApi';
 import { setProfilePicture } from '../../features/user/userSlice';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useSQLiteContext } from 'expo-sqlite';
 import { clearUser } from '../../features/user/userSlice';
 import { Ionicons } from 'react-native-vector-icons';
+import Toast from 'react-native-toast-message';
 
 
 
@@ -46,10 +48,15 @@ const ProfileScreen = () => {
     const logout = async () => {
         try {
             const result = await db.runAsync('DELETE FROM sessions WHERE localId = $localId', {$localId: localId})
-            //console.log("Sesion cerrada", result)
+            dispatch(userApi.util.resetApiState())
             dispatch(clearUser())
         } catch (error) {
             //console.log("Error cerrando sesion", error)
+            Toast.show({
+                type: 'error',
+                text1: 'Hubo un error cerrando sesion',
+                position: 'top',
+            })
         }
     }
 
@@ -74,6 +81,11 @@ const ProfileScreen = () => {
                 }
             } catch (error) {
                 //console.log("Error al obtener la ubicación:", error);
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hubo un error obteniendo la ubicación',
+                    position: 'top',
+                })
             } finally {
                 setLocationLoaded(true);
             }
