@@ -24,7 +24,8 @@
           "apiKey": "process.env.EXPO_PUBLIC_GMAPS_API_KEY"
         }
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.martinelmorey.remecommerce"
     },
     "web": {
       "favicon": "./assets/favicon.png"
