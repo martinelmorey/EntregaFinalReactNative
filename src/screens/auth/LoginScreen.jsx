@@ -206,9 +206,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 8,
         alignItems: 'center',
+        marginVertical: 30,  
     },
     whiteText: {
-        color: colors.white
+        color: colors.white,
     },
     underLineText: {
         textDecorationLine: 'underline',
