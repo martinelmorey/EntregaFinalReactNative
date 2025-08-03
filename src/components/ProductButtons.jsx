@@ -51,7 +51,7 @@ const ProductButtons = ({
 
     const handleAddToCart = async () => {
         try {
-            await addToCart({localId: localId, product: product})
+            await addToCart({localId: localId, product: product, quantity: quantity})
             dispatch(addItems({product: product, quantity: quantity}))
             Toast.show({
                 type: 'success',

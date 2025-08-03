@@ -19,12 +19,13 @@ export const cartApi = createApi({
             }
         }),
         addToCart: builder.mutation({
-            query: ({localId, product}) => ({
+            query: ({localId, product, quantity}) => ({
                 url: `cart/${localId}/${product.id}.json`,
                 method: 'PUT',
                 body: {
                     title: product.title,
                     price: product.price,
+                    quantity: quantity,
                     mainImage: product.mainImage,
                     brand: product.brand,
                     addedAt: Date.now()

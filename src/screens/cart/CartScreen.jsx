@@ -4,21 +4,27 @@ import FlatCard from '../../components/FlatCard'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeItems, clearCartLocal } from '../../features/cart/cartSlice'
+import { useGetCartQuery } from '../../services/cart/cartApi'
 import { useAddOrderMutation } from '../../services/orders/ordersApi'
 import { useClearCartMutation, useRemoveFromCartMutation } from '../../services/cart/cartApi'
 import Toast from 'react-native-toast-message'
+import Loader from '../../components/Loader'
 
 const CartScreen = ({navigation}) => {
 
   const localId = useSelector(state => state.userReducer.localId)
-  const cartItems = useSelector(state => state.cartReducer.cartItems)
+  //const cartItems = useSelector(state => state.cartReducer.cartItems)
   const total = useSelector(state => state.cartReducer.total)
   const dispatch = useDispatch()
 
   const [addOrder] = useAddOrderMutation()
   const [clearCart] = useClearCartMutation()
   const [removeFromCart] = useRemoveFromCartMutation()
-  
+  const { data: cartItems = [], isLoading, error } = useGetCartQuery(localId)
+
+  if (isLoading) return <Loader text="Cargando tu carrito..." />
+  if (error) return <Text style={styles.message}>Error al cargar tu carrito</Text>
+
   const handleConfirmOrder = async () => {
     if (cartItems.length === 0) return
     

@@ -8,7 +8,7 @@ import { loginSchema } from '../../validations/yupSchema';
 import {useSQLiteContext} from 'expo-sqlite';
 import {LinearGradient} from 'expo-linear-gradient'
 import AnimatedError from '../../components/AnimatedError';
-
+import Toast from 'react-native-toast-message'
 
 const textInputWidth = Dimensions.get('window').width * 0.7
 
@@ -52,6 +52,11 @@ const LoginScreen = ({ navigation, route }) => {
                 //console.log("Usuario guardado en DB", result)
             }
         } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: 'Hubo un error guardando el usuario en la base de datos',
+                position: 'top',
+            })
             //console.log("Error guardando usuario en DB", error)
         }
     }
