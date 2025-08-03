@@ -69,8 +69,8 @@ npm install
 3. Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 ```
 EXPO_PUBLIC_API_KEY=<tu-api-key-de-firebase>
-EXPO_PUBLIC_BASE_RTDB_URL=<tu-url-de-firebase-rtdb>
-EXPO_PUBLIC_AUTH_BASE_URL=<tu-url-de-autenticación>
+EXPO_PUBLIC_BASE_RTDB_URL=https://rementerprisesapp-default-rtdb.firebaseio.com/
+EXPO_PUBLIC_AUTH_BASE_URL=https://identitytoolkit.googleapis.com/v1/
 EXPO_PUBLIC_GMAPS_API_KEY=<tu-api-key-de-google-maps>
 ```
 
