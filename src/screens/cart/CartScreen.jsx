@@ -14,13 +14,14 @@ const CartScreen = ({navigation}) => {
 
   const localId = useSelector(state => state.userReducer.localId)
   //const cartItems = useSelector(state => state.cartReducer.cartItems)
-  const total = useSelector(state => state.cartReducer.total)
+  //const total = useSelector(state => state.cartReducer.total)
   const dispatch = useDispatch()
 
   const [addOrder] = useAddOrderMutation()
   const [clearCart] = useClearCartMutation()
   const [removeFromCart] = useRemoveFromCartMutation()
   const { data: cartItems = [], isLoading, error } = useGetCartQuery(localId)
+  const total = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
   if (isLoading) return <Loader text="Cargando tu carrito..." />
   if (error) return <Text style={styles.message}>Error al cargar tu carrito</Text>
