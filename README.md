@@ -45,8 +45,9 @@ src/
 │   └── user/        # Pantalla de perfil de usuario
 ├── services/        # Servicios de API con RTK Query
 │   ├── auth/        # Servicios de autenticación
+│   ├── cart/        # Servicios para gestión de elcarrito
 │   ├── lista/       # Servicios para gestión de favoritos
-│   ├── orders/      # Servicios para gestión de órdenes
+│   ├── orders/      # Servicios para gestión de las órdenes
 │   ├── shop/        # Servicios para productos
 │   └── user/        # Servicios para datos de usuario
 ├── store/           # Configuración de Redux store
